@@ -137,7 +137,7 @@ const searchSuggestions = [
 ];
 
 // Cuisine types for filters
-const cuisineTypes = ["Italian", "Chinese", "Japanese", "Indian", "Vegan", "Mexican", "Thai", "American"];
+// const cuisineTypes = ["Italian", "Chinese", "Japanese", "Indian", "Vegan", "Mexican", "Thai", "American"];
 
 // Street foods for roulette
 const streetFoods = [
@@ -229,7 +229,7 @@ const trendingDishes = [
 const Explore = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
+  // const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
   const [selectedRating, setSelectedRating] = useState('');
   const [selectedDistance, setSelectedDistance] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState('');
@@ -321,11 +321,11 @@ const Explore = () => {
     }
 
     // Cuisine filter
-    if (selectedCuisines.length > 0) {
-      filtered = filtered.filter(restaurant =>
-        selectedCuisines.includes(restaurant.cuisine)
-      );
-    }
+    // if (selectedCuisines.length > 0) {
+    //   filtered = filtered.filter(restaurant =>
+    //     selectedCuisines.includes(restaurant.cuisine)
+    //   );
+    // }
 
     // Rating filter
     if (selectedRating) {
@@ -384,13 +384,13 @@ const Explore = () => {
   };
 
   // Toggle cuisine selection
-  const toggleCuisine = (cuisine: string) => {
-    setSelectedCuisines(prev =>
-      prev.includes(cuisine)
-        ? prev.filter(c => c !== cuisine)
-        : [...prev, cuisine]
-    );
-  };
+  // const toggleCuisine = (cuisine: string) => {
+  //   setSelectedCuisines(prev =>
+  //     prev.includes(cuisine)
+  //       ? prev.filter(c => c !== cuisine)
+  //       : [...prev, cuisine]
+  //   );
+  // };
 
   // Handle restaurant selection
   const handleRestaurantSelect = (restaurant: any) => {
@@ -514,7 +514,7 @@ const Explore = () => {
   // Apply filters when dependencies change (NO auto-scroll)
   useEffect(() => {
     applyFilters();
-  }, [selectedCuisines, selectedRating, selectedDistance, selectedPriceRange, openNow, mapRestaurants]);
+  }, [/*selectedCuisines, */selectedRating, selectedDistance, selectedPriceRange, openNow, mapRestaurants]);
 
   // Handle Go button click (with auto-scroll)
   const handleGoButtonClick = () => {
@@ -599,33 +599,7 @@ const Explore = () => {
 
           {filtersExpanded && (
             <div className="px-4 pb-4">
-              {/* Cuisine Types */}
-              <div className="mb-4">
-                <label className={`block text-sm font-medium mb-2 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Cuisine Type
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {cuisineTypes.map(cuisine => (
-                    <button
-                      key={cuisine}
-                      onClick={() => toggleCuisine(cuisine)}
-                      className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                        selectedCuisines.includes(cuisine)
-                          ? theme === 'synesthesia'
-                            ? 'bg-purple-500 text-white'
-                            : 'bg-orange-500 text-white'
-                          : theme === 'dark'
-                            ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      {cuisine}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              
 
               {/* Vertical Filter Layout */}
               <div className="space-y-4">
