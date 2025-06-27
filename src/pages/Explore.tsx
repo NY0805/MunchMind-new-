@@ -168,37 +168,6 @@ const streetFoods = [
   }
 ];
 
-// Restaurant lis image
-const RestaurantImage = ({ name, location }) => {
-  const [imageUrl, setImageUrl] = useState('https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg');
-
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const res = await fetch(
-          `/api/restaurant-photo?name=${encodeURIComponent(name)}&location=${encodeURIComponent(location)}`
-        );
-        const data = await res.json();
-        if (data.imageUrl) setImageUrl(data.imageUrl);
-      } catch (error) {
-        console.error('Failed to fetch image:', error);
-      }
-    };
-
-    fetchImage();
-  }, [name, location]);
-
-  return (
-    <img
-      src={imageUrl}
-      alt={name}
-      className="w-16 h-16 rounded-lg object-cover mr-4"
-    />
-  );
-};
-
-
-
 // Trending dishes
 const trendingDishes = [
   {
@@ -797,13 +766,11 @@ const Explore = () => {
                     theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                   } ${index !== displayedRestaurants.length - 1 ? 'border-b border-gray-300' : ''}`}
                 >
-                  {/* <img
+                  <img
                     src={restaurant.image}
                     alt={restaurant.name}
                     className="w-16 h-16 rounded-lg object-cover mr-4"
-                  /> */}
-
-                  <RestaurantImage name={restaurant.name} location={`${userLocation?.lat},${userLocation?.lng}`} />
+                  />
                   
                   <div className="flex-1">
                     <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
