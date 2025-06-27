@@ -136,9 +136,6 @@ const searchSuggestions = [
   "Kung Pao Chicken", "Beef Noodles", "Vegan Burger", "Salmon Sashimi", "Biryani"
 ];
 
-// Cuisine types for filters
-// const cuisineTypes = ["Italian", "Chinese", "Japanese", "Indian", "Vegan", "Mexican", "Thai", "American"];
-
 // Street foods for roulette
 const streetFoods = [
   {
@@ -170,6 +167,37 @@ const streetFoods = [
     image: "https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg"
   }
 ];
+
+// Restaurant lis image
+const RestaurantImage = ({ name, location }) => {
+  const [imageUrl, setImageUrl] = useState('https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg');
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const res = await fetch(
+          `/api/restaurant-photo?name=${encodeURIComponent(name)}&location=${encodeURIComponent(location)}`
+        );
+        const data = await res.json();
+        if (data.imageUrl) setImageUrl(data.imageUrl);
+      } catch (error) {
+        console.error('Failed to fetch image:', error);
+      }
+    };
+
+    fetchImage();
+  }, [name, location]);
+
+  return (
+    <img
+      src={imageUrl}
+      alt={name}
+      className="w-16 h-16 rounded-lg object-cover mr-4"
+    />
+  );
+};
+
+
 
 // Trending dishes
 const trendingDishes = [
@@ -229,7 +257,6 @@ const trendingDishes = [
 const Explore = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
-  // const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
   const [selectedRating, setSelectedRating] = useState('');
   const [selectedDistance, setSelectedDistance] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState('');
@@ -320,13 +347,6 @@ const Explore = () => {
       );
     }
 
-    // Cuisine filter
-    // if (selectedCuisines.length > 0) {
-    //   filtered = filtered.filter(restaurant =>
-    //     selectedCuisines.includes(restaurant.cuisine)
-    //   );
-    // }
-
     // Rating filter
     if (selectedRating) {
       const minRating = parseFloat(selectedRating);
@@ -382,15 +402,6 @@ const Explore = () => {
     // Apply filters with the selected suggestion but don't auto-scroll
     setTimeout(applyFilters, 0);
   };
-
-  // Toggle cuisine selection
-  // const toggleCuisine = (cuisine: string) => {
-  //   setSelectedCuisines(prev =>
-  //     prev.includes(cuisine)
-  //       ? prev.filter(c => c !== cuisine)
-  //       : [...prev, cuisine]
-  //   );
-  // };
 
   // Handle restaurant selection
   const handleRestaurantSelect = (restaurant: any) => {
@@ -514,7 +525,7 @@ const Explore = () => {
   // Apply filters when dependencies change (NO auto-scroll)
   useEffect(() => {
     applyFilters();
-  }, [/*selectedCuisines, */selectedRating, selectedDistance, selectedPriceRange, openNow, mapRestaurants]);
+  }, [selectedRating, selectedDistance, selectedPriceRange, openNow, mapRestaurants]);
 
   // Handle Go button click (with auto-scroll)
   const handleGoButtonClick = () => {
@@ -786,11 +797,13 @@ const Explore = () => {
                     theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                   } ${index !== displayedRestaurants.length - 1 ? 'border-b border-gray-300' : ''}`}
                 >
-                  <img
+                  {/* <img
                     src={restaurant.image}
                     alt={restaurant.name}
                     className="w-16 h-16 rounded-lg object-cover mr-4"
-                  />
+                  /> */}
+
+                  <RestaurantImage name={restaurant.name} location={`${userLocation?.lat},${userLocation?.lng}`} />
                   
                   <div className="flex-1">
                     <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
