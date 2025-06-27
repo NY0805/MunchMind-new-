@@ -168,26 +168,6 @@ const streetFoods = [
   }
 ];
 
-// Restaurant list image
-const [imageUrl, setImageUrl] = useState("https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg");
-useEffect(() => {
-  const fetchImage = async () => {
-    try {
-      const res = await fetch(
-      `https://eznfdkjamlrcggmacopg.supabase.co/functions/v1/get-place-photo?name=${encodeURIComponent(restaurant.name)}&location=${encodeURIComponent(restaurant.address)}`
-      );
-      const data = await res.json();
-      if (data.photoUrl) {
-        setImageUrl(data.photoUrl);
-      }
-    } catch (error) {
-      console.error('Failed to load restaurant photo:', error);
-    }
-  };
-
-  fetchImage();
-}, [restaurant.name, restaurant.address]);
-
 
 // Trending dishes
 const trendingDishes = [
