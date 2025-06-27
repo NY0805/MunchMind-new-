@@ -79,13 +79,7 @@ const GlobalStreetFoodRoulette = () => {
       </button>
       
       {selectedFood && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50" style={{ 
-          height: '100vh', 
-          width: '100vw', 
-          top: 0, 
-          left: 0,
-          padding: '1rem'
-        }}>
+        <div className="modal-overlay" onClick={() => setSelectedFood(null)}>
           <div 
             className={`modal-content modal-medium animate-modal-in ${
               theme === 'dark' ? 'bg-gray-800' : 'bg-white'

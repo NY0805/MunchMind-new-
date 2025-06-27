@@ -8,7 +8,7 @@ import DateRangeSelector from './DateRangeSelector';
 const FoodKarmaTracker = () => {
   const [selectedRange, setSelectedRange] = useState('thisWeek');
   const [karmaData, setKarmaData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { theme } = useTheme();
   const { user, isAuthenticated, isValidUser } = useUser();
   

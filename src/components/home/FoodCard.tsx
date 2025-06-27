@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useFavourites } from '../../context/FavouritesContext';
 import { useUser } from '../../context/UserContext';
-import { supabase } from '../../lib/supabase';
+import { getRealisticLocation } from '../../utils/foodImages';
 
 interface Food {
   id: number;
@@ -52,8 +52,8 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
     if (isInFavourites) {
       removeFromFavourites(food.id);
     } else {
-      // Store as "Recipe" for homepage recipes (no location)
-      localStorage.setItem(`location_${food.id}`, 'Recipe');
+      // Store as "AI Chef Recipe" for homepage recipes
+      localStorage.setItem(`location_${food.id}`, 'AI Chef Recipe');
       
       addToFavourites(food);
     }
@@ -63,38 +63,7 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
     setShowInfo(!showInfo);
   };
 
-  const saveRecipeCompletion = async () => {
-    if (isValidUser()) {
-      try {
-        await supabase
-          .from('recipes')
-          .insert({
-            user_id: user.id,
-            recipe_id: food.id,
-            recipe_name: food.name,
-            difficulty: 'Medium',
-            tried_at: new Date().toISOString()
-          });
-        console.log('Recipe completion saved to database');
-      } catch (error) {
-        console.error('Failed to save recipe completion:', error);
-      }
-    }
-  };
-
-  const handleTryRecipe = async () => {
-    // Save recipe completion first
-    await saveRecipeCompletion();
-
-    // Update last bite date with dd/mm/yyyy format
-    const now = new Date();
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    const formattedDate = `${day}/${month}/${year}`;
-    
-    localStorage.setItem(`lastBite_${food.id}`, formattedDate);
-
+  const handleTryRecipe = () => {
     // Create a recipe object based on the food
     const recipe = {
       id: food.id,

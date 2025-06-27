@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Info, Crown, LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useUser } from '../../context/UserContext';
-import { supabase } from '../../lib/supabase';
 import CustomPaywall from './CustomPaywall';
 import PersonalizedRecommendations from './PersonalizedRecommendations';
 import InfoTooltip from './InfoTooltip';
@@ -14,14 +13,14 @@ const NutritionalDNA = () => {
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
   const [nutrients, setNutrients] = useState([
-    { name: 'Protein', value: 75, goal: 100, color: 'from-blue-400 to-blue-500' },
-    { name: 'Fiber', value: 60, goal: 100, color: 'from-green-400 to-green-500' },
-    { name: 'Iron', value: 45, goal: 100, color: 'from-orange-400 to-orange-500' },
-    { name: 'Calcium', value: 80, goal: 100, color: 'from-purple-400 to-purple-500' },
-    { name: 'Vitamin C', value: 90, goal: 100, color: 'from-yellow-400 to-yellow-500' },
-    { name: 'Omega-3', value: 30, goal: 100, color: 'from-cyan-400 to-cyan-500' }
+    { name: 'Protein', value: 0, goal: 100, color: 'from-blue-400 to-blue-500' },
+    { name: 'Fiber', value: 0, goal: 100, color: 'from-green-400 to-green-500' },
+    { name: 'Iron', value: 0, goal: 100, color: 'from-orange-400 to-orange-500' },
+    { name: 'Calcium', value: 0, goal: 100, color: 'from-purple-400 to-purple-500' },
+    { name: 'Vitamin C', value: 0, goal: 100, color: 'from-yellow-400 to-yellow-500' },
+    { name: 'Omega-3', value: 0, goal: 100, color: 'from-cyan-400 to-cyan-500' }
   ]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { theme } = useTheme();
   const { isPro, isLoadingProStatus, checkProStatus, user, isAuthenticated } = useUser();
   const navigate = useNavigate();
@@ -29,52 +28,6 @@ const NutritionalDNA = () => {
   // Check if user is guest or not logged in - lock premium features
   const isGuest = !isAuthenticated || !user || user.is_guest;
   const hasAccess = !isGuest && isPro;
-
-  // Load nutritional data based on recipes
-  useEffect(() => {
-    const loadNutritionalData = async () => {
-      if (isGuest) return;
-      
-      try {
-        setIsLoading(true);
-        
-        // Get recipe count from database
-        const { data: recipes } = await supabase
-          .from('recipes')
-          .select('id')
-          .eq('user_id', user.id);
-        
-        const recipeCount = recipes?.length || 0;
-        
-        // Generate nutrient values based on recipe count
-        if (recipeCount > 0) {
-          // Calculate nutrient values based on recipe count
-          // More recipes = higher values
-          const proteinValue = Math.min(Math.floor(recipeCount * 5), 100);
-          const fiberValue = Math.min(Math.floor(recipeCount * 4), 100);
-          const ironValue = Math.min(Math.floor(recipeCount * 3), 100);
-          const calciumValue = Math.min(Math.floor(recipeCount * 5.5), 100);
-          const vitaminCValue = Math.min(Math.floor(recipeCount * 6), 100);
-          const omega3Value = Math.min(Math.floor(recipeCount * 2), 100);
-          
-          setNutrients([
-            { name: 'Protein', value: proteinValue, goal: 100, color: 'from-blue-400 to-blue-500' },
-            { name: 'Fiber', value: fiberValue, goal: 100, color: 'from-green-400 to-green-500' },
-            { name: 'Iron', value: ironValue, goal: 100, color: 'from-orange-400 to-orange-500' },
-            { name: 'Calcium', value: calciumValue, goal: 100, color: 'from-purple-400 to-purple-500' },
-            { name: 'Vitamin C', value: vitaminCValue, goal: 100, color: 'from-yellow-400 to-yellow-500' },
-            { name: 'Omega-3', value: omega3Value, goal: 100, color: 'from-cyan-400 to-cyan-500' }
-          ]);
-        }
-      } catch (error) {
-        console.error('Failed to load nutritional data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadNutritionalData();
-  }, [user, isGuest]);
 
   const handleGetRecommendations = () => {
     if (isGuest) {
@@ -101,6 +54,25 @@ const NutritionalDNA = () => {
     setShowLoginPrompt(false);
     navigate('/login');
   };
+
+  if (isLoading) {
+    return (
+      <div className={`rounded-lg overflow-hidden shadow-md ${
+        theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+      }`}>
+        <div className="p-4">
+          <div className="animate-pulse">
+            <div className="h-4 bg-gray-300 rounded w-1/4 mb-4"></div>
+            <div className="space-y-2">
+              <div className="h-4 bg-gray-300 rounded"></div>
+              <div className="h-4 bg-gray-300 rounded w-5/6"></div>
+              <div className="h-4 bg-gray-300 rounded w-4/6"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

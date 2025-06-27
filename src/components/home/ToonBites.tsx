@@ -5,7 +5,6 @@ import { useTheme } from '../../context/ThemeContext';
 import { useUser } from '../../context/UserContext';
 import { useFavourites } from '../../context/FavouritesContext';
 import { getRandomFoodImage, getRealisticLocation } from '../../utils/foodImages';
-import { supabase } from '../../lib/supabase';
 import CustomPaywall from '../profile/CustomPaywall';
 
 const allToonFoods = [
@@ -92,26 +91,7 @@ const ToonBites = () => {
 
   const displayedFoods = showAll ? allToonFoods : currentFoods;
 
-  const saveRecipeCompletion = async (food: any) => {
-    if (isValidUser()) {
-      try {
-        await supabase
-          .from('recipes')
-          .insert({
-            user_id: user.id,
-            recipe_id: food.id,
-            recipe_name: food.name,
-            difficulty: 'Easy',
-            tried_at: new Date().toISOString()
-          });
-        console.log('Recipe completion saved to database');
-      } catch (error) {
-        console.error('Failed to save recipe completion:', error);
-      }
-    }
-  };
-
-  const handleCardClick = async (food: any) => {
+  const handleCardClick = (food: any) => {
     if (!food.unlocked && (!hasAccess || isLoadingProStatus)) {
       if (isGuest) {
         setShowLoginPrompt(true);
@@ -119,18 +99,6 @@ const ToonBites = () => {
       }
       setShowPaywall(true);
     } else if (food.unlocked || hasAccess) {
-      // Save recipe completion first
-      await saveRecipeCompletion(food);
-
-      // Update last bite date with dd/mm/yyyy format
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const year = now.getFullYear();
-      const formattedDate = `${day}/${month}/${year}`;
-      
-      localStorage.setItem(`lastBite_${food.id}`, formattedDate);
-
       // Navigate to AI Chef with recipe
       const recipe = {
         id: food.id,
@@ -167,8 +135,8 @@ const ToonBites = () => {
     if (isFavourite(food.id)) {
       removeFromFavourites(food.id);
     } else {
-      // Store as "Recipe" for Toon Bites (no location)
-      localStorage.setItem(`location_${food.id}`, 'Recipe');
+      // Store as AI Chef Recipe for Toon Bites
+      localStorage.setItem(`location_${food.id}`, 'AI Chef Recipe');
       addToFavourites(foodItem);
     }
   };

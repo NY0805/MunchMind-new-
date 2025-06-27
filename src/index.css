@@ -44,7 +44,7 @@
 
   /* Enhanced Modal positioning - Vertically centered, ignoring bottom nav */
   .modal-overlay {
-    @apply fixed inset-0 z-[10000] flex items-center justify-center;
+    @apply fixed inset-0 z-50 flex items-center justify-center;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);

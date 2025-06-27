@@ -139,7 +139,7 @@ const PrivacyControls = () => {
       // Clear localStorage data except essential auth data
       const keysToKeep = [
         'rememberMe',
-        'user_id',
+        'user_id', 
         'session_token',
         'session_expires',
         'userRegistrationDate'
@@ -185,37 +185,18 @@ const PrivacyControls = () => {
   const confirmLogOut = async () => {
     setShowLogoutConfirm(false);
     
-    try {
-      // Reset RevenueCat if available
-      if (window.Purchases) {
-        try {
-          await window.Purchases.logOut();
-          console.log('RevenueCat logged out');
-        } catch (error) {
-          console.error('Failed to log out from RevenueCat:', error);
-        }
+    // Reset RevenueCat if available
+    if (window.Purchases) {
+      try {
+        await window.Purchases.logOut();
+        console.log('RevenueCat logged out');
+      } catch (error) {
+        console.error('Failed to log out from RevenueCat:', error);
       }
-      
-      // Sign out from Supabase
-      await supabase.auth.signOut();
-      
-      // Clear all session data
-      localStorage.removeItem('rememberMe');
-      localStorage.removeItem('user_id');
-      localStorage.removeItem('session_token');
-      localStorage.removeItem('session_expires');
-      sessionStorage.removeItem('user_id');
-      sessionStorage.removeItem('session_token');
-      
-      // Call the signOut function from UserContext
-      await signOut();
-      
-      // Navigate to login page
-      navigate('/login');
-    } catch (error) {
-      console.error('Failed to log out:', error);
-      alert('Failed to log out. Please try again.');
     }
+    
+    await signOut();
+    navigate('/login');
   };
 
   const handleLogin = () => {
