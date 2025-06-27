@@ -291,7 +291,7 @@ const RestaurantDetails = () => {
             theme === 'dark' ? 'bg-gray-800' : 'bg-white'
           }`}>
             <div className="flex">
-              <button
+              {/* <button
                 onClick={() => setActiveTab('menu')}
                 className={`flex-1 py-3 px-4 font-medium transition-colors border-b-2 ${
                   activeTab === 'menu'
@@ -302,7 +302,7 @@ const RestaurantDetails = () => {
                 }`}
               >
                 Menu
-              </button>
+              </button> */}
               <button
                 onClick={() => setActiveTab('reviews')}
                 className={`flex-1 py-3 px-4 font-medium transition-colors border-b-2 ${
@@ -330,59 +330,7 @@ const RestaurantDetails = () => {
             </div>
 
             <div className="p-4">
-              {activeTab === 'menu' && (
-                <div>
-                  <h3 className={`text-lg font-semibold mb-4 ${
-                    theme === 'dark' ? 'text-white' : 'text-gray-800'
-                  }`}>
-                    Menu
-                  </h3>
-                  
-                  {/* Menu Photos */}
-                  {restaurant.photos && restaurant.photos.length > 0 ? (
-                    <div className="mb-6">
-                      <h4 className={`text-md font-medium mb-3 ${
-                        theme === 'dark' ? 'text-white' : 'text-gray-800'
-                      }`}>
-                        Menu Photos
-                      </h4>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {restaurant.photos.slice(0, 6).map((photo, index) => (
-                          <div
-                            key={index}
-                            className="relative aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                            onClick={() => handleImageClick(index)}
-                          >
-                            <img
-                              src={photo}
-                              alt={`Menu photo ${index + 1}`}
-                              className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-center justify-center">
-                              <ZoomIn size={24} className="text-white opacity-0 hover:opacity-100 transition-opacity" />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className={`p-8 text-center ${
-                      theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
-                    } rounded-lg`}>
-                      <p className={`text-lg ${
-                        theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                      }`}>
-                        Menu photos not available
-                      </p>
-                      <p className={`text-sm mt-2 ${
-                        theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                      }`}>
-                        Please contact the restaurant directly for menu details
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
+              
 
               {activeTab === 'reviews' && (
                 <div>
