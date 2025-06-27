@@ -291,18 +291,7 @@ const RestaurantDetails = () => {
             theme === 'dark' ? 'bg-gray-800' : 'bg-white'
           }`}>
             <div className="flex">
-              {/* <button
-                onClick={() => setActiveTab('menu')}
-                className={`flex-1 py-3 px-4 font-medium transition-colors border-b-2 ${
-                  activeTab === 'menu'
-                    ? 'border-orange-500 text-orange-500'
-                    : theme === 'dark'
-                      ? 'border-gray-600 text-gray-300 hover:text-gray-200'
-                      : 'border-gray-200 text-gray-700 hover:text-gray-900'
-                }`}
-              >
-                Menu
-              </button> */}
+              
               <button
                 onClick={() => setActiveTab('reviews')}
                 className={`flex-1 py-3 px-4 font-medium transition-colors border-b-2 ${
