@@ -433,7 +433,7 @@ const TrendingDishDetails = () => {
         </div>
 
         {/* Related Restaurants */}
-        <div className={`rounded-xl mb-6 ${
+        {/* <div className={`rounded-xl mb-6 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         } shadow-lg overflow-hidden`}>
           <div className="p-6">
@@ -489,7 +489,7 @@ const TrendingDishDetails = () => {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Learn Recipe Button */}
         <div className="text-center">
