@@ -14,7 +14,7 @@ const RestaurantDetails = () => {
   // Get restaurant data from navigation state
   const restaurant = location.state?.restaurant;
   
-  const [activeTab, setActiveTab] = useState('menu');
+  const [activeTab, setActiveTab] = useState('reviews');
   const [showImageModal, setShowImageModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageZoom, setImageZoom] = useState(1);
