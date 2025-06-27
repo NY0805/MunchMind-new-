@@ -768,7 +768,7 @@ const Explore = () => {
                   } ${index !== displayedRestaurants.length - 1 ? 'border-b border-gray-300' : ''}`}
                 >
                   <img
-                    src={imageUrl}
+                    src={restaurant.image}
                     alt={restaurant.name}
                     className="w-16 h-16 rounded-lg object-cover mr-4"
                   />
