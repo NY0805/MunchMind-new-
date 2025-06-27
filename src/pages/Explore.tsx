@@ -934,7 +934,47 @@ const Explore = () => {
           </div>
         </div>
 
-        
+        {/* Trending Dishes */}
+        <div>
+          <h3 className={`text-xl font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+            Trending Dishes
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {trendingDishes.map(dish => (
+              <div
+                key={dish.id}
+                onClick={() => handleDishDetails(dish)}
+                className={`rounded-xl overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 ${
+                  theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+                }`}
+              >
+                <div className="relative">
+                  <img
+                    src={dish.image}
+                    alt={dish.name}
+                    className="w-full h-32 object-cover"
+                  />
+                  <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium ${
+                    dish.badge === 'Viral' ? 'bg-red-500 text-white' :
+                    dish.badge === 'Trending' ? 'bg-orange-500 text-white' :
+                    'bg-blue-500 text-white'
+                  }`}>
+                    <TrendingUp size={12} className="inline mr-1" />
+                    {dish.badge}
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                    {dish.name}
+                  </h4>
+                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                    {dish.restaurants} restaurants nearby
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Login Prompt Modal for Favorites */}
