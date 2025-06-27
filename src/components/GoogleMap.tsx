@@ -292,6 +292,9 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
                 placeDetails.photos.slice(0, 5).map((photo: any) => 
                   getPhotoUrl(photo.photo_reference)
                 ) : [];
+              console.log("Photo references for", place.name, ":", placeDetails.photos?.map((p: any) => p.photo_reference));
+console.log("Generated photo URLs for", place.name, ":", photos);
+
 
               // Extract reviews
               const reviews = placeDetails.reviews ? 
