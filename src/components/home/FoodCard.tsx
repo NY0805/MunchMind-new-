@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useFavourites } from '../../context/FavouritesContext';
 import { useUser } from '../../context/UserContext';
+import { getRealisticLocation } from '../../utils/foodImages';
 
 interface Food {
   id: number;
@@ -51,7 +52,7 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
     if (isInFavourites) {
       removeFromFavourites(food.id);
     } else {
-      // Store as "AI Chef Recipe" for homepage recipes - NO LOCATION
+      // Store as "AI Chef Recipe" for homepage recipes
       localStorage.setItem(`location_${food.id}`, 'AI Chef Recipe');
       
       addToFavourites(food);
