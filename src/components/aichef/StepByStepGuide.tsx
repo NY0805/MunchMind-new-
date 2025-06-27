@@ -94,6 +94,15 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
     } else if (currentStep === recipe.steps.length - 1) {
       // Recipe completed - save to database
       await saveRecipeCompletion();
+      
+      // Update last bite date with dd/mm/yyyy format
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const formattedDate = `${day}/${month}/${year}`;
+      
+      localStorage.setItem(`lastBite_${recipe.id}`, formattedDate);
     }
   };
   
@@ -140,8 +149,8 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
     if (isFavourite(recipe.id)) {
       removeFromFavourites(recipe.id);
     } else {
-      // Store location as "AI Chef Recipe" for recipes
-      localStorage.setItem(`location_${recipe.id}`, 'AI Chef Recipe');
+      // Store as "Recipe" for AI Chef recipes
+      localStorage.setItem(`location_${recipe.id}`, 'Recipe');
       addToFavourites(foodItem);
     }
   };

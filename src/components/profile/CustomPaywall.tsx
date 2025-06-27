@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, Crown, Check, CreditCard, Smartphone } from 'lucide-react';
+import { X, Crown, Check, CreditCard } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
-import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useUser } from '../../context/UserContext';
 
 interface CustomPaywallProps {
@@ -16,10 +15,8 @@ const CustomPaywall: React.FC<CustomPaywallProps> = ({
   onSuccess 
 }) => {
   const { theme } = useTheme();
-  const { user } = useUser();
-  const { isPremium, purchasePremium, restorePurchases } = usePremiumStatus(user?.id);
+  const { setIsPro } = useUser();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // Disable background scrolling when modal is open
   useEffect(() => {
@@ -37,48 +34,26 @@ const CustomPaywall: React.FC<CustomPaywallProps> = ({
   // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
-      setError(null);
       setIsProcessing(false);
     }
   }, [isOpen]);
 
   const handleSubscribe = async () => {
     setIsProcessing(true);
-    setError(null);
     
     try {
-      const success = await purchasePremium();
+      // Simulate subscription process
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      if (success) {
-        console.log('✅ Purchase successful!');
-        onSuccess();
-      } else {
-        // Purchase was cancelled by user
-        console.log('🚫 Purchase cancelled');
-      }
-    } catch (error: any) {
-      console.error('❌ Purchase failed:', error);
-      setError(error.message || 'Purchase failed. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const handleRestorePurchases = async () => {
-    setIsProcessing(true);
-    setError(null);
-    
-    try {
-      const success = await restorePurchases();
+      // Set user as pro
+      setIsPro(true);
       
-      if (success) {
-        onSuccess();
-      } else {
-        setError('No previous purchases found to restore.');
-      }
-    } catch (error: any) {
-      console.error('❌ Restore failed:', error);
-      setError('Failed to restore purchases. Please try again.');
+      // Show success message
+      alert('Successfully subscribed! All premium features are now unlocked.');
+      
+      onSuccess();
+    } catch (error) {
+      console.error('Subscription failed:', error);
     } finally {
       setIsProcessing(false);
     }
@@ -111,13 +86,6 @@ const CustomPaywall: React.FC<CustomPaywallProps> = ({
           <Crown size={48} className="mx-auto mb-2" />
           <h2 className="text-2xl font-bold">Unlock Premium</h2>
           <p className="text-white/90 text-sm">Get access to all premium features</p>
-          
-          {/* Development Mode Badge */}
-          {(import.meta.env.DEV || import.meta.env.MODE === 'development') && (
-            <div className="mt-3 px-3 py-1 bg-white/20 rounded-full text-xs">
-              🧪 Sandbox Mode - Use test card 4242 4242 4242 4242
-            </div>
-          )}
         </div>
         
         {/* Content */}
@@ -156,13 +124,6 @@ const CustomPaywall: React.FC<CustomPaywallProps> = ({
             </div>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
-              {error}
-            </div>
-          )}
-
           {/* Action Buttons */}
           <div className="space-y-3">
             <button 
@@ -191,22 +152,6 @@ const CustomPaywall: React.FC<CustomPaywallProps> = ({
             </button>
             
             <button 
-              id="restoreButton"
-              onClick={handleRestorePurchases}
-              disabled={isProcessing}
-              className={`w-full py-3 rounded-full font-medium flex items-center justify-center gap-2 ${
-                isProcessing
-                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                  : theme === 'dark'
-                    ? 'bg-gray-700 hover:bg-gray-600 text-white'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
-              } transition-colors`}
-            >
-              <Smartphone size={16} />
-              Restore Purchases
-            </button>
-            
-            <button 
               onClick={onClose}
               disabled={isProcessing}
               className={`w-full py-3 rounded-full font-medium ${
@@ -225,10 +170,7 @@ const CustomPaywall: React.FC<CustomPaywallProps> = ({
           <p className={`text-xs text-center mt-4 ${
             theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
           }`}>
-            {(import.meta.env.DEV || import.meta.env.MODE === 'development')
-              ? 'Sandbox mode - Use test card 4242 4242 4242 4242 for testing'
-              : 'Cancel anytime. No commitment required.'
-            }
+            Cancel anytime. No commitment required.
           </p>
         </div>
       </div>

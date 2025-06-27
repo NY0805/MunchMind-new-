@@ -3,6 +3,8 @@ import { Heart, MapPin, Utensils, ArrowUpDown, Trash2, Navigation, ChefHat, Star
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useFavourites } from '../context/FavouritesContext';
+import { supabase } from '../lib/supabase';
+import { useUser } from '../context/UserContext';
 
 const Favourites = () => {
   const [sortOrder, setSortOrder] = useState('A-Z');
@@ -12,6 +14,7 @@ const Favourites = () => {
   const [activeTab, setActiveTab] = useState<'restaurants' | 'recipes'>('restaurants');
   const { theme } = useTheme();
   const { favourites, removeFromFavourites } = useFavourites();
+  const { user, isValidUser } = useUser();
   const navigate = useNavigate();
 
   // Disable background scrolling when modal is open
@@ -30,12 +33,12 @@ const Favourites = () => {
   // Separate favourites into restaurants and recipes
   const restaurants = favourites.filter(fav => {
     const location = localStorage.getItem(`location_${fav.id}`) || '';
-    return location !== 'AI Chef Recipe' && location !== '-';
+    return location !== 'Recipe' && location !== 'AI Chef Recipe' && location !== '-';
   });
 
   const recipes = favourites.filter(fav => {
     const location = localStorage.getItem(`location_${fav.id}`) || '';
-    return location === 'AI Chef Recipe' || location === '-';
+    return location === 'Recipe' || location === 'AI Chef Recipe' || location === '-';
   });
 
   const currentFavourites = activeTab === 'restaurants' ? restaurants : recipes;
@@ -52,11 +55,30 @@ const Favourites = () => {
     setShowYumAgainModal(food);
   };
 
-  const handleGoToLocation = (food: any) => {
+  const saveRecipeCompletion = async (food: any) => {
+    if (isValidUser()) {
+      try {
+        await supabase
+          .from('recipes')
+          .insert({
+            user_id: user.id,
+            recipe_id: food.id,
+            recipe_name: food.name,
+            difficulty: 'Medium',
+            tried_at: new Date().toISOString()
+          });
+        console.log('Recipe completion saved to database');
+      } catch (error) {
+        console.error('Failed to save recipe completion:', error);
+      }
+    }
+  };
+
+  const handleGoToLocation = async (food: any) => {
     const location = localStorage.getItem(`location_${food.id}`) || 'Restaurant location';
     
-    // Check if location is unavailable (for Toon Bites and Cinematic Cravings)
-    if (location === '-') {
+    // Check if location is unavailable (for recipes)
+    if (location === 'Recipe' || location === 'AI Chef Recipe' || location === '-') {
       setShowLocationUnavailable(true);
       setShowYumAgainModal(null);
       return;
@@ -76,7 +98,10 @@ const Favourites = () => {
     setShowYumAgainModal(null);
   };
 
-  const handleCookMyself = (food: any) => {
+  const handleCookMyself = async (food: any) => {
+    // Save recipe completion first
+    await saveRecipeCompletion(food);
+
     // Create a recipe object and navigate to AI Chef
     const recipe = {
       id: food.id,
@@ -126,7 +151,7 @@ const Favourites = () => {
 
   const getItemType = (food: any) => {
     const location = localStorage.getItem(`location_${food.id}`) || '';
-    return location === 'AI Chef Recipe' || location === '-' ? 'recipe' : 'restaurant';
+    return location === 'Recipe' || location === 'AI Chef Recipe' || location === '-' ? 'recipe' : 'restaurant';
   };
 
   return (
@@ -231,7 +256,7 @@ const Favourites = () => {
             
             <div className="space-y-3">
               {sortedFavourites.map(food => {
-                const location = localStorage.getItem(`location_${food.id}`) || '-';
+                const location = localStorage.getItem(`location_${food.id}`) || '';
                 const lastBite = localStorage.getItem(`lastBite_${food.id}`) || '-';
                 const itemType = getItemType(food);
                 
@@ -274,13 +299,15 @@ const Favourites = () => {
                           {food.description}
                         </p>
                         
-                        {/* Location on separate row */}
-                        <div className="flex items-center gap-1 mb-1">
-                          <MapPin size={10} className={theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} />
-                          <span className={`text-xs ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} truncate`}>
-                            {location}
-                          </span>
-                        </div>
+                        {/* Show location only for restaurants */}
+                        {activeTab === 'restaurants' && (
+                          <div className="flex items-center gap-1 mb-1">
+                            <MapPin size={10} className={theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} />
+                            <span className={`text-xs ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} truncate`}>
+                              {location}
+                            </span>
+                          </div>
+                        )}
                         
                         {/* Last Bites on separate row */}
                         <div className="flex items-center gap-1 mb-2">
@@ -337,17 +364,19 @@ const Favourites = () => {
               </p>
               
               <div className="space-y-2">
-                <button
-                  onClick={() => handleGoToLocation(showYumAgainModal)}
-                  className={`w-full flex items-center justify-center gap-2 py-2 rounded-full font-medium text-sm ${
-                    theme === 'synesthesia'
-                      ? 'bg-purple-500 hover:bg-purple-600 text-white'
-                      : 'bg-blue-500 hover:bg-blue-600 text-white'
-                  } transition-colors`}
-                >
-                  <Navigation size={16} />
-                  Go to Location
-                </button>
+                {activeTab === 'restaurants' && (
+                  <button
+                    onClick={() => handleGoToLocation(showYumAgainModal)}
+                    className={`w-full flex items-center justify-center gap-2 py-2 rounded-full font-medium text-sm ${
+                      theme === 'synesthesia'
+                        ? 'bg-purple-500 hover:bg-purple-600 text-white'
+                        : 'bg-blue-500 hover:bg-blue-600 text-white'
+                    } transition-colors`}
+                  >
+                    <Navigation size={16} />
+                    Go to Location
+                  </button>
+                )}
                 
                 <button
                   onClick={() => handleCookMyself(showYumAgainModal)}
@@ -398,7 +427,7 @@ const Favourites = () => {
               <p className={`text-sm mb-4 ${
                 theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
               }`}>
-                This is a fictional food item from movies or cartoons. The location is not available for navigation.
+                This is a recipe item. The location is not available for navigation.
               </p>
               
               <button
