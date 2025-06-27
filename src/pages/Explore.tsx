@@ -169,11 +169,12 @@ const streetFoods = [
 ];
 
 // Restaurant list image
+const [imageUrl, setImageUrl] = useState("https://images.pexels.com/photos/1351238/pexels-photo-1351238.jpeg");
 useEffect(() => {
   const fetchImage = async () => {
     try {
       const res = await fetch(
-      https://eznfdkjamlrcggmacopg.supabase.co/functions/v1/get-place-photo?name=${encodeURIComponent(restaurant.name)}&location=${encodeURIComponent(restaurant.address)}`
+      `https://eznfdkjamlrcggmacopg.supabase.co/functions/v1/get-place-photo?name=${encodeURIComponent(restaurant.name)}&location=${encodeURIComponent(restaurant.address)}`
       );
       const data = await res.json();
       if (data.photoUrl) {
@@ -787,7 +788,7 @@ const Explore = () => {
                   } ${index !== displayedRestaurants.length - 1 ? 'border-b border-gray-300' : ''}`}
                 >
                   <img
-                    src={restaurant.image}
+                    src={imageUrl}
                     alt={restaurant.name}
                     className="w-16 h-16 rounded-lg object-cover mr-4"
                   />
