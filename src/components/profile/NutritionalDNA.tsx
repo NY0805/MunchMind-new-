@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Info, Crown, LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
@@ -28,6 +28,31 @@ const NutritionalDNA = () => {
   // Check if user is guest or not logged in - lock premium features
   const isGuest = !isAuthenticated || !user || user.is_guest;
   const hasAccess = !isGuest && isPro;
+
+  // Simulate loading and generate realistic data
+  useEffect(() => {
+    const loadNutritionalData = () => {
+      setIsLoading(true);
+      
+      // Simulate loading time
+      setTimeout(() => {
+        if (!isGuest) {
+          // Generate realistic nutritional data for logged-in users
+          const updatedNutrients = nutrients.map(nutrient => ({
+            ...nutrient,
+            value: Math.floor(Math.random() * 80) + 20 // Random value between 20-100
+          }));
+          setNutrients(updatedNutrients);
+        } else {
+          // Keep all values at 0 for guest users
+          setNutrients(nutrients.map(n => ({ ...n, value: 0 })));
+        }
+        setIsLoading(false);
+      }, 1000);
+    };
+
+    loadNutritionalData();
+  }, [user, isAuthenticated]);
 
   const handleGetRecommendations = () => {
     if (isGuest) {
