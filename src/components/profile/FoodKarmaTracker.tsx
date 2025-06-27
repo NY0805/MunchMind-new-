@@ -19,39 +19,36 @@ const FoodKarmaTracker = () => {
     const loadKarmaData = async () => {
       setIsLoading(true);
       
-      // Simulate loading time
-      setTimeout(async () => {
-        if (isValidUser()) {
-          try {
-            // Get recipe count from database
-            const { data: recipes } = await supabase
-              .from('recipes')
-              .select('tried_at')
-              .eq('user_id', user.id)
-              .order('tried_at', { ascending: true });
-            
-            const recipeCount = recipes?.length || 0;
-            
-            // Generate karma data based on actual recipes
-            if (recipeCount > 0) {
-              // Create realistic data based on recipe count
-              const baseData = generateDataFromRecipes(recipeCount, selectedRange);
-              setKarmaData(baseData);
-            } else {
-              // No recipes yet - all zeros
-              setKarmaData(generateEmptyData(selectedRange));
-            }
-          } catch (error) {
-            console.error('Failed to load karma data:', error);
+      if (isValidUser()) {
+        try {
+          // Get recipe count from database
+          const { data: recipes } = await supabase
+            .from('recipes')
+            .select('tried_at')
+            .eq('user_id', user.id)
+            .order('tried_at', { ascending: true });
+          
+          const recipeCount = recipes?.length || 0;
+          
+          // Generate karma data based on actual recipes
+          if (recipeCount > 0) {
+            // Create realistic data based on recipe count
+            const baseData = generateDataFromRecipes(recipeCount, selectedRange);
+            setKarmaData(baseData);
+          } else {
+            // No recipes yet - all zeros
             setKarmaData(generateEmptyData(selectedRange));
           }
-        } else {
-          // Guest user - all zeros
+        } catch (error) {
+          console.error('Failed to load karma data:', error);
           setKarmaData(generateEmptyData(selectedRange));
         }
-        
-        setIsLoading(false);
-      }, 800); // Reduced loading time
+      } else {
+        // Guest user - all zeros
+        setKarmaData(generateEmptyData(selectedRange));
+      }
+      
+      setIsLoading(false);
     };
 
     loadKarmaData();
