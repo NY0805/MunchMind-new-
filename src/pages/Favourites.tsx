@@ -274,13 +274,15 @@ const Favourites = () => {
                           {food.description}
                         </p>
                         
-                        {/* Location on separate row */}
-                        <div className="flex items-center gap-1 mb-1">
-                          <MapPin size={10} className={theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} />
-                          <span className={`text-xs ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} truncate`}>
-                            {location}
-                          </span>
-                        </div>
+                        {/* Show location only for restaurants */}
+                        {activeTab === 'restaurants' && (
+                          <div className="flex items-center gap-1 mb-1">
+                            <MapPin size={10} className={theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} />
+                            <span className={`text-xs ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} truncate`}>
+                              {location}
+                            </span>
+                          </div>
+                        )}
                         
                         {/* Last Bites on separate row */}
                         <div className="flex items-center gap-1 mb-2">
@@ -337,17 +339,19 @@ const Favourites = () => {
               </p>
               
               <div className="space-y-2">
-                <button
-                  onClick={() => handleGoToLocation(showYumAgainModal)}
-                  className={`w-full flex items-center justify-center gap-2 py-2 rounded-full font-medium text-sm ${
-                    theme === 'synesthesia'
-                      ? 'bg-purple-500 hover:bg-purple-600 text-white'
-                      : 'bg-blue-500 hover:bg-blue-600 text-white'
-                  } transition-colors`}
-                >
-                  <Navigation size={16} />
-                  Go to Location
-                </button>
+                {activeTab === 'restaurants' && (
+                  <button
+                    onClick={() => handleGoToLocation(showYumAgainModal)}
+                    className={`w-full flex items-center justify-center gap-2 py-2 rounded-full font-medium text-sm ${
+                      theme === 'synesthesia'
+                        ? 'bg-purple-500 hover:bg-purple-600 text-white'
+                        : 'bg-blue-500 hover:bg-blue-600 text-white'
+                    } transition-colors`}
+                  >
+                    <Navigation size={16} />
+                    Go to Location
+                  </button>
+                )}
                 
                 <button
                   onClick={() => handleCookMyself(showYumAgainModal)}

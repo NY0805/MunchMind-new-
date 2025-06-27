@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, MapPin, Utensils, Info, Flame } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useUser } from '../context/UserContext';
+import { supabase } from '../lib/supabase';
 
 // Mock restaurant data that matches the restaurant names in trending dishes
 const mockRestaurants = [
@@ -228,6 +230,7 @@ const TrendingDishDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { user, isValidUser } = useUser();
   
   // Get dish data from navigation state
   const dish = location.state?.dish;
@@ -259,7 +262,29 @@ const TrendingDishDetails = () => {
     );
   }
 
-  const handleLearnRecipe = () => {
+  const saveRecipeCompletion = async () => {
+    if (isValidUser()) {
+      try {
+        await supabase
+          .from('recipes')
+          .insert({
+            user_id: user.id,
+            recipe_id: dish.id,
+            recipe_name: dish.name,
+            difficulty: 'Medium',
+            tried_at: new Date().toISOString()
+          });
+        console.log('Recipe completion saved to database');
+      } catch (error) {
+        console.error('Failed to save recipe completion:', error);
+      }
+    }
+  };
+
+  const handleLearnRecipe = async () => {
+    // Save recipe completion to database
+    await saveRecipeCompletion();
+
     const recipe = {
       id: dish.id,
       name: dish.name,

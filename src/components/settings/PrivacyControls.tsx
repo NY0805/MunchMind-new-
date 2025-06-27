@@ -123,19 +123,6 @@ const PrivacyControls = () => {
         ]);
       }
       
-      // Reset RevenueCat if available (but keep subscription status)
-      if (window.Purchases && !currentUser?.is_guest) {
-        try {
-          // Just log out and log back in to refresh state
-          await window.Purchases.logOut();
-          if (currentUser?.id) {
-            await window.Purchases.identify(currentUser.id);
-          }
-        } catch (error) {
-          console.error('Failed to reset RevenueCat state:', error);
-        }
-      }
-      
       // Clear localStorage data except essential auth data
       const keysToKeep = [
         'rememberMe',
@@ -185,18 +172,29 @@ const PrivacyControls = () => {
   const confirmLogOut = async () => {
     setShowLogoutConfirm(false);
     
-    // Reset RevenueCat if available
-    if (window.Purchases) {
-      try {
-        await window.Purchases.logOut();
-        console.log('RevenueCat logged out');
-      } catch (error) {
-        console.error('Failed to log out from RevenueCat:', error);
-      }
+    try {
+      // Sign out from Supabase
+      await supabase.auth.signOut();
+      
+      // Clear all session data
+      localStorage.removeItem('rememberMe');
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('session_token');
+      localStorage.removeItem('session_expires');
+      sessionStorage.removeItem('user_id');
+      sessionStorage.removeItem('session_token');
+      sessionStorage.removeItem('userRegistrationDate');
+      
+      // Call the user context signOut method
+      await signOut();
+      
+      // Navigate to login
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Force navigation even if logout fails
+      navigate('/login');
     }
-    
-    await signOut();
-    navigate('/login');
   };
 
   const handleLogin = () => {

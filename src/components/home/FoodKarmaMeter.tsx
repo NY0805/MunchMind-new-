@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useUser } from '../../context/UserContext';
@@ -17,9 +17,9 @@ const FoodKarmaMeter: React.FC<FoodKarmaMeterProps> = ({ points }) => {
   const isGuest = !isAuthenticated || !user || user.is_guest;
   
   // For new users, always start with 0 points
-  const [actualPoints, setActualPoints] = React.useState(0);
+  const [actualPoints, setActualPoints] = useState(0);
   
-  React.useEffect(() => {
+  useEffect(() => {
     const loadKarmaPoints = async () => {
       if (isValidUser()) {
         try {

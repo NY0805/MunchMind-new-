@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Info, Crown, LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useUser } from '../../context/UserContext';
+import { supabase } from '../../lib/supabase';
 import CustomPaywall from './CustomPaywall';
 import PersonalizedRecommendations from './PersonalizedRecommendations';
 import InfoTooltip from './InfoTooltip';
@@ -22,12 +23,53 @@ const NutritionalDNA = () => {
   ]);
   const [isLoading, setIsLoading] = useState(true);
   const { theme } = useTheme();
-  const { isPro, isLoadingProStatus, checkProStatus, user, isAuthenticated } = useUser();
+  const { isPro, isLoadingProStatus, checkProStatus, user, isAuthenticated, isValidUser } = useUser();
   const navigate = useNavigate();
 
   // Check if user is guest or not logged in - lock premium features
   const isGuest = !isAuthenticated || !user || user.is_guest;
   const hasAccess = !isGuest && isPro;
+
+  // Load nutritional data based on recipe count
+  useEffect(() => {
+    const loadNutritionalData = async () => {
+      setIsLoading(true);
+      
+      if (isValidUser()) {
+        try {
+          // Get recipe count from database
+          const { data: recipes } = await supabase
+            .from('recipes')
+            .select('id')
+            .eq('user_id', user.id);
+          
+          const recipeCount = recipes?.length || 0;
+          
+          // Calculate nutritional values based on recipe count
+          const baseValues = [78, 65, 45, 82, 95, 30]; // Base percentages
+          const updatedNutrients = nutrients.map((nutrient, index) => ({
+            ...nutrient,
+            value: Math.min(baseValues[index] + (recipeCount * 2), 100) // Increase by 2% per recipe, max 100%
+          }));
+          
+          setNutrients(updatedNutrients);
+        } catch (error) {
+          console.error('Failed to load nutritional data:', error);
+        }
+      } else {
+        // Guest user - all zeros
+        const guestNutrients = nutrients.map(nutrient => ({
+          ...nutrient,
+          value: 0
+        }));
+        setNutrients(guestNutrients);
+      }
+      
+      setIsLoading(false);
+    };
+
+    loadNutritionalData();
+  }, [user, isAuthenticated, isValidUser]);
 
   const handleGetRecommendations = () => {
     if (isGuest) {

@@ -5,6 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useUser } from '../../context/UserContext';
 import { useFavourites } from '../../context/FavouritesContext';
 import { getRandomFoodImage, getRealisticLocation } from '../../utils/foodImages';
+import { supabase } from '../../lib/supabase';
 import CustomPaywall from '../profile/CustomPaywall';
 
 const allToonFoods = [
@@ -91,7 +92,26 @@ const ToonBites = () => {
 
   const displayedFoods = showAll ? allToonFoods : currentFoods;
 
-  const handleCardClick = (food: any) => {
+  const saveRecipeCompletion = async (food: any) => {
+    if (isValidUser()) {
+      try {
+        await supabase
+          .from('recipes')
+          .insert({
+            user_id: user.id,
+            recipe_id: food.id,
+            recipe_name: food.name,
+            difficulty: 'Easy',
+            tried_at: new Date().toISOString()
+          });
+        console.log('Recipe completion saved to database');
+      } catch (error) {
+        console.error('Failed to save recipe completion:', error);
+      }
+    }
+  };
+
+  const handleCardClick = async (food: any) => {
     if (!food.unlocked && (!hasAccess || isLoadingProStatus)) {
       if (isGuest) {
         setShowLoginPrompt(true);
@@ -99,6 +119,9 @@ const ToonBites = () => {
       }
       setShowPaywall(true);
     } else if (food.unlocked || hasAccess) {
+      // Save recipe completion to database
+      await saveRecipeCompletion(food);
+
       // Navigate to AI Chef with recipe
       const recipe = {
         id: food.id,
@@ -135,7 +158,7 @@ const ToonBites = () => {
     if (isFavourite(food.id)) {
       removeFromFavourites(food.id);
     } else {
-      // Store as AI Chef Recipe for Toon Bites
+      // Store as AI Chef Recipe for Toon Bites (no location)
       localStorage.setItem(`location_${food.id}`, 'AI Chef Recipe');
       addToFavourites(foodItem);
     }

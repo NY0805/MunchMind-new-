@@ -44,7 +44,7 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
   ]);
 
   // Use the RevenueCat premium status hook
-  const { isPremium, isLoading: isLoadingProStatus, purchasePremium } = usePremiumStatus(user?.id);
+  const { isPremium, isLoading: isLoadingProStatus } = usePremiumStatus(user?.id);
   const [isPro, setIsPro] = useState(isPremium);
 
   // Update isPro when premium status changes
@@ -155,16 +155,6 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
         await supabase.auth.signOut();
       }
       
-      // Reset RevenueCat if available
-      if (window.Purchases) {
-        try {
-          await window.Purchases.logOut();
-          console.log('✅ RevenueCat logged out');
-        } catch (error) {
-          console.error('❌ Failed to log out from RevenueCat:', error);
-        }
-      }
-      
       // Clear all session data
       localStorage.removeItem('rememberMe');
       localStorage.removeItem('user_id');
@@ -262,18 +252,32 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
   };
 
   const checkProStatus = async () => {
-    // This is now handled by the usePremiumStatus hook
     // Just update the local state
     setIsPro(isPremium);
   };
 
   const showPaywall = async (): Promise<boolean> => {
     try {
-      const success = await purchasePremium();
-      if (success) {
-        setIsPro(true);
+      // Simulate successful purchase
+      setIsPro(true);
+      
+      // Save to Supabase if user is valid
+      if (isValidUser()) {
+        try {
+          await supabase
+            .from('unlocked_premium')
+            .upsert({
+              user_id: user.id,
+              content_type: 'pro_access',
+              content_id: 1,
+              unlocked_at: new Date().toISOString()
+            });
+        } catch (error) {
+          console.error('Failed to save premium status to Supabase:', error);
+        }
       }
-      return success;
+      
+      return true;
     } catch (error) {
       console.error('Failed to show paywall:', error);
       return false;
@@ -289,9 +293,6 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
         setUser(initialUser);
         setIsAuthenticated(true);
         await loadUserProfile(initialUser.id);
-        
-        // Initialize RevenueCat with user ID
-        await identifyWithRevenueCat(initialUser.id);
         
         // Store registration date if not already stored
         if (!localStorage.getItem('userRegistrationDate')) {
@@ -309,9 +310,6 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
             setUser(session.user);
             setIsAuthenticated(true);
             await loadUserProfile(session.user.id);
-            
-            // Initialize RevenueCat with user ID
-            await identifyWithRevenueCat(session.user.id);
           } else {
             // Create guest user if no valid session
             await signIn();
@@ -334,9 +332,6 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
           setIsAuthenticated(true);
           await loadUserProfile(session.user.id);
           
-          // Initialize RevenueCat with user ID
-          await identifyWithRevenueCat(session.user.id);
-          
           // Store registration date for new users
           if (!localStorage.getItem('userRegistrationDate')) {
             localStorage.setItem('userRegistrationDate', session.user.created_at);
@@ -345,16 +340,6 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
           setUser(null);
           setIsAuthenticated(false);
           setIsPro(false);
-          
-          // Log out from RevenueCat
-          if (window.Purchases) {
-            try {
-              await window.Purchases.logOut();
-              console.log('✅ RevenueCat logged out on auth change');
-            } catch (error) {
-              console.error('❌ Failed to log out from RevenueCat on auth change:', error);
-            }
-          }
         }
       }
     );
