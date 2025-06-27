@@ -8,219 +8,41 @@ import TrendingDishes from '../components/explore/TrendingDishes';
 import CulturalTimeTravel from '../components/explore/CulturalTimeTravel';
 import FoodPuzzleChallenge from '../components/explore/FoodPuzzleChallenge';
 import GlobalStreetFoodRoulette from '../components/explore/GlobalStreetFoodRoulette';
+import GoogleMap from '../components/GoogleMap';
 import { getRandomFoodImage, categorizeFoodByName } from '../utils/foodImages';
-
-// Mock restaurant data with generated images
-const mockRestaurants = [
-  {
-    id: 1,
-    name: "Bella Vista Italian",
-    cuisine: "Italian",
-    rating: 4.5,
-    distance: 0.3,
-    isOpen: true,
-    description: "Authentic Italian cuisine with fresh pasta and wood-fired pizza",
-    address: "123 Main Street, Downtown",
-    phone: "+1 (555) 123-4567",
-    coordinates: { lat: 40.7128, lng: -74.0060 },
-    priceLevel: 3,
-    specialDish: "Truffle Pasta",
-    photos: [
-      getRandomFoodImage('pasta'),
-      getRandomFoodImage('pasta'),
-      getRandomFoodImage('pasta')
-    ],
-    reviews: [
-      { author: "Maria R.", rating: 5, text: "Amazing pasta! Best Italian food in the city.", date: "2 days ago", profilePhoto: null },
-      { author: "John D.", rating: 4, text: "Great atmosphere and delicious food.", date: "1 week ago", profilePhoto: null }
-    ],
-    openingHours: [
-      "Sunday: 12:00 PM – 10:00 PM",
-      "Monday: 11:00 AM – 10:00 PM", 
-      "Tuesday: 11:00 AM – 10:00 PM",
-      "Wednesday: 11:00 AM – 10:00 PM",
-      "Thursday: 11:00 AM – 10:00 PM",
-      "Friday: 11:00 AM – 11:00 PM",
-      "Saturday: 11:00 AM – 11:00 PM"
-    ],
-    userRatingsTotal: 127
-  },
-  {
-    id: 2,
-    name: "Sakura Sushi",
-    cuisine: "Japanese",
-    rating: 4.8,
-    distance: 0.7,
-    isOpen: true,
-    description: "Fresh sushi and traditional Japanese dishes",
-    address: "456 Oak Avenue, Midtown",
-    phone: "+1 (555) 234-5678",
-    coordinates: { lat: 40.7282, lng: -74.0776 },
-    priceLevel: 4,
-    specialDish: "Omakase Set",
-    photos: [
-      getRandomFoodImage('seafood'),
-      getRandomFoodImage('seafood'),
-      getRandomFoodImage('seafood')
-    ],
-    reviews: [
-      { author: "Yuki T.", rating: 5, text: "Exceptional sushi quality. Worth every penny!", date: "1 day ago", profilePhoto: null },
-      { author: "Mike S.", rating: 5, text: "Best sushi in town, fresh fish daily.", date: "3 days ago", profilePhoto: null }
-    ],
-    openingHours: [
-      "Sunday: Closed",
-      "Monday: 5:00 PM – 10:00 PM",
-      "Tuesday: 5:00 PM – 10:00 PM", 
-      "Wednesday: 5:00 PM – 10:00 PM",
-      "Thursday: 5:00 PM – 10:00 PM",
-      "Friday: 5:00 PM – 11:00 PM",
-      "Saturday: 5:00 PM – 11:00 PM"
-    ],
-    userRatingsTotal: 89
-  },
-  {
-    id: 3,
-    name: "Spice Garden",
-    cuisine: "Indian",
-    rating: 4.3,
-    distance: 1.2,
-    isOpen: false,
-    description: "Authentic Indian spices and traditional curry dishes",
-    address: "789 Spice Lane, Little India",
-    phone: "+1 (555) 345-6789",
-    coordinates: { lat: 40.7505, lng: -73.9934 },
-    priceLevel: 2,
-    specialDish: "Butter Chicken",
-    photos: [
-      getRandomFoodImage('curry'),
-      getRandomFoodImage('curry'),
-      getRandomFoodImage('curry')
-    ],
-    reviews: [
-      { author: "Priya K.", rating: 4, text: "Authentic flavors that remind me of home.", date: "5 days ago", profilePhoto: null },
-      { author: "Alex M.", rating: 4, text: "Great curry selection and reasonable prices.", date: "1 week ago", profilePhoto: null }
-    ],
-    openingHours: [
-      "Sunday: 12:00 PM – 9:00 PM",
-      "Monday: 11:00 AM – 9:00 PM",
-      "Tuesday: 11:00 AM – 9:00 PM",
-      "Wednesday: 11:00 AM – 9:00 PM", 
-      "Thursday: 11:00 AM – 9:00 PM",
-      "Friday: 11:00 AM – 10:00 PM",
-      "Saturday: 11:00 AM – 10:00 PM"
-    ],
-    userRatingsTotal: 156
-  },
-  {
-    id: 4,
-    name: "Green Leaf Café",
-    cuisine: "Vegetarian",
-    rating: 4.6,
-    distance: 0.5,
-    isOpen: true,
-    description: "Fresh vegetarian and vegan options with organic ingredients",
-    address: "321 Green Street, Eco District",
-    phone: "+1 (555) 456-7890",
-    coordinates: { lat: 40.7614, lng: -73.9776 },
-    priceLevel: 2,
-    specialDish: "Quinoa Power Bowl",
-    photos: [
-      getRandomFoodImage('salad'),
-      getRandomFoodImage('salad'),
-      getRandomFoodImage('salad')
-    ],
-    reviews: [
-      { author: "Emma G.", rating: 5, text: "Love the fresh ingredients and creative dishes!", date: "1 day ago", profilePhoto: null },
-      { author: "David L.", rating: 4, text: "Great healthy options, perfect for lunch.", date: "4 days ago", profilePhoto: null }
-    ],
-    openingHours: [
-      "Sunday: 8:00 AM – 8:00 PM",
-      "Monday: 7:00 AM – 8:00 PM",
-      "Tuesday: 7:00 AM – 8:00 PM",
-      "Wednesday: 7:00 AM – 8:00 PM",
-      "Thursday: 7:00 AM – 8:00 PM",
-      "Friday: 7:00 AM – 9:00 PM",
-      "Saturday: 8:00 AM – 9:00 PM"
-    ],
-    userRatingsTotal: 203
-  },
-  {
-    id: 5,
-    name: "Burger Junction",
-    cuisine: "American",
-    rating: 4.2,
-    distance: 0.9,
-    isOpen: true,
-    description: "Gourmet burgers and classic American comfort food",
-    address: "654 Burger Ave, Food Court",
-    phone: "+1 (555) 567-8901",
-    coordinates: { lat: 40.7282, lng: -74.0776 },
-    priceLevel: 2,
-    specialDish: "Signature Beef Burger",
-    photos: [
-      getRandomFoodImage('burger'),
-      getRandomFoodImage('burger'),
-      getRandomFoodImage('burger')
-    ],
-    reviews: [
-      { author: "Jake P.", rating: 4, text: "Juicy burgers and great fries!", date: "2 days ago", profilePhoto: null },
-      { author: "Lisa W.", rating: 4, text: "Classic American diner experience.", date: "6 days ago", profilePhoto: null }
-    ],
-    openingHours: [
-      "Sunday: 11:00 AM – 10:00 PM",
-      "Monday: 11:00 AM – 10:00 PM",
-      "Tuesday: 11:00 AM – 10:00 PM",
-      "Wednesday: 11:00 AM – 10:00 PM",
-      "Thursday: 11:00 AM – 10:00 PM",
-      "Friday: 11:00 AM – 11:00 PM",
-      "Saturday: 11:00 AM – 11:00 PM"
-    ],
-    userRatingsTotal: 98
-  },
-  {
-    id: 6,
-    name: "Café Mocha",
-    cuisine: "Coffee & Desserts",
-    rating: 4.4,
-    distance: 0.4,
-    isOpen: true,
-    description: "Artisan coffee and homemade pastries",
-    address: "987 Coffee Street, Arts Quarter",
-    phone: "+1 (555) 678-9012",
-    coordinates: { lat: 40.7505, lng: -73.9934 },
-    priceLevel: 2,
-    specialDish: "Signature Latte",
-    photos: [
-      getRandomFoodImage('drink'),
-      getRandomFoodImage('dessert'),
-      getRandomFoodImage('breakfast')
-    ],
-    reviews: [
-      { author: "Sophie B.", rating: 5, text: "Best coffee in the neighborhood!", date: "1 day ago", profilePhoto: null },
-      { author: "Mark T.", rating: 4, text: "Cozy atmosphere and great pastries.", date: "3 days ago", profilePhoto: null }
-    ],
-    openingHours: [
-      "Sunday: 7:00 AM – 7:00 PM",
-      "Monday: 6:00 AM – 8:00 PM",
-      "Tuesday: 6:00 AM – 8:00 PM",
-      "Wednesday: 6:00 AM – 8:00 PM",
-      "Thursday: 6:00 AM – 8:00 PM",
-      "Friday: 6:00 AM – 9:00 PM",
-      "Saturday: 7:00 AM – 9:00 PM"
-    ],
-    userRatingsTotal: 145
-  }
-];
 
 const Explore = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
-  const [restaurants, setRestaurants] = useState(mockRestaurants);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [restaurants, setRestaurants] = useState<any[]>([]);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { theme } = useTheme();
   const { addToFavourites, removeFromFavourites, isFavourite } = useFavourites();
   const { isValidUser } = useUser();
   const navigate = useNavigate();
+
+  // Get user location on component mount
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          // Fallback to NYC coordinates
+          setUserLocation({ lat: 40.7128, lng: -74.0060 });
+        }
+      );
+    } else {
+      // Fallback to NYC coordinates
+      setUserLocation({ lat: 40.7128, lng: -74.0060 });
+    }
+  }, []);
 
   // Disable background scrolling when modal is open
   useEffect(() => {
@@ -243,16 +65,20 @@ const Explore = () => {
     return matchesSearch && matchesFilter;
   });
 
-  const handleRestaurantClick = (restaurant: any) => {
+  const handleRestaurantSelect = (restaurant: any) => {
     // Add generated image to restaurant object
     const restaurantWithImage = {
       ...restaurant,
-      image: getRandomFoodImage(categorizeFoodByName(restaurant.specialDish))
+      image: getRandomFoodImage(categorizeFoodByName(restaurant.specialDish || restaurant.name))
     };
     
     navigate(`/restaurant/${restaurant.id}`, { 
       state: { restaurant: restaurantWithImage } 
     });
+  };
+
+  const handleRestaurantsUpdate = (newRestaurants: any[]) => {
+    setRestaurants(newRestaurants);
   };
 
   const handleFavoriteToggle = (restaurant: any) => {
@@ -264,7 +90,7 @@ const Explore = () => {
     const foodItem = {
       id: restaurant.id,
       name: restaurant.name,
-      image: getRandomFoodImage(categorizeFoodByName(restaurant.specialDish)),
+      image: getRandomFoodImage(categorizeFoodByName(restaurant.specialDish || restaurant.name)),
       description: restaurant.description,
       nutrition: `${getPriceLevelDisplay(restaurant.priceLevel)} price range`,
       mood: 'neutral'
@@ -273,7 +99,7 @@ const Explore = () => {
     if (isFavourite(restaurant.id)) {
       removeFromFavourites(restaurant.id);
     } else {
-      // Store restaurant location
+      // Store restaurant location for Explore page items
       localStorage.setItem(`location_${restaurant.id}`, restaurant.address);
       addToFavourites(foodItem);
     }
@@ -340,18 +166,23 @@ const Explore = () => {
           </div>
         </div>
 
-        {/* Trending Dishes */}
+        {/* Google Map */}
         <section className="responsive-section">
           <h2 className={`responsive-subtitle mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-700'}`}>
-            Trending Dishes
+            Nearby Restaurants
           </h2>
-          <TrendingDishes />
+          <GoogleMap 
+            restaurants={restaurants}
+            onRestaurantSelect={handleRestaurantSelect}
+            userLocation={userLocation}
+            onRestaurantsUpdate={handleRestaurantsUpdate}
+          />
         </section>
 
         {/* Restaurants List */}
         <section className="responsive-section">
           <h2 className={`responsive-subtitle mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-700'}`}>
-            Nearby Restaurants ({filteredRestaurants.length})
+            Restaurant List ({filteredRestaurants.length})
           </h2>
           
           {filteredRestaurants.length === 0 ? (
@@ -377,17 +208,17 @@ const Explore = () => {
                   <div className="flex h-32 sm:h-40">
                     <div 
                       className="w-1/3 relative"
-                      onClick={() => handleRestaurantClick(restaurant)}
+                      onClick={() => handleRestaurantSelect(restaurant)}
                     >
                       <img 
-                        src={getRandomFoodImage(categorizeFoodByName(restaurant.specialDish))}
+                        src={getRandomFoodImage(categorizeFoodByName(restaurant.specialDish || restaurant.name))}
                         alt={restaurant.name} 
                         className="w-full h-full object-cover"
                       />
                     </div>
                     
                     <div className="w-2/3 p-4 flex flex-col justify-between">
-                      <div onClick={() => handleRestaurantClick(restaurant)}>
+                      <div onClick={() => handleRestaurantSelect(restaurant)}>
                         <div className="flex justify-between items-start mb-2">
                           <h3 className={`font-semibold text-lg ${
                             theme === 'dark' ? 'text-white' : 'text-gray-800'
@@ -420,7 +251,7 @@ const Explore = () => {
                           <div className="flex items-center gap-1">
                             <Star size={14} className="text-yellow-500 fill-current" />
                             <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>
-                              {restaurant.rating.toFixed(1)}
+                              {restaurant.rating?.toFixed(1)}
                             </span>
                           </div>
                           
@@ -451,6 +282,14 @@ const Explore = () => {
               ))}
             </div>
           )}
+        </section>
+
+        {/* Trending Dishes */}
+        <section className="responsive-section">
+          <h2 className={`responsive-subtitle mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-700'}`}>
+            Trending Dishes
+          </h2>
+          <TrendingDishes />
         </section>
 
         {/* Cultural Time Travel */}
