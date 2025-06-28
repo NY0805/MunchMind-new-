@@ -28,7 +28,7 @@ const BottomNavigation = () => {
   return (
     <nav className={`fixed bottom-8 w-full h-14 sm:h-16 flex items-center border-t ${
       theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-    } shadow-lg z-[9998]`}>
+    } shadow-lg z-40`}>
       <NavLink to="/home" className={getActiveStyles('/home')}>
         <Home size={18} className={`sm:w-5 sm:h-5 ${location.pathname === '/home' ? 'animate-bounce-slow' : ''}`} />
         <span className="mt-1 text-xs sm:text-sm">Home</span>
