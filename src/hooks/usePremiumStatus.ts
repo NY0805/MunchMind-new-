@@ -43,10 +43,6 @@ export const usePremiumStatus = (userId?: string) => {
         //   setIsLoading(false);
         //   return;
         // }
-        if (premiumData && premiumData.length > 0) {
-          console.log('✅ Premium detected in Supabase');
-          setIsPremium(true);
-          return true; // NEW
         }
 
       }
