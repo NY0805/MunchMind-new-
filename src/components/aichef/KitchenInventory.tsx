@@ -4,6 +4,8 @@ import { useTheme } from '../../context/ThemeContext';
 import { useUser } from '../../context/UserContext';
 import { supabase } from '../../lib/supabase';
 
+const [loadedFromSupabase, setLoadedFromSupabase] = useState(false);
+
 const initialInventory = [
   { id: 1, name: 'Eggs', quantity: 6, unit: 'pcs' },
   { id: 2, name: 'Milk', quantity: 1, unit: 'L' },
@@ -30,14 +32,14 @@ const KitchenInventory = () => {
     localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
     
     // Save to Supabase only for valid users
-    if (isValidUser()) {
+    if (isValidUser() && loadedFromSupabase) {
       saveInventoryToSupabase();
     } else if (user && user.is_guest) {
       // Show warning for guest users
       setShowSaveWarning(true);
       setTimeout(() => setShowSaveWarning(false), 3000);
     }
-  }, [inventory, user, isAuthenticated]);
+  }, [inventory, user, isAuthenticated, loadedFromSupabase]);
 
   const saveInventoryToSupabase = async () => {
     if (!isValidUser()) return;
@@ -89,6 +91,7 @@ const KitchenInventory = () => {
             }));
             setInventory(formattedInventory);
           }
+          setLoadedFromSupabase(true);
         } catch (error) {
           console.error('Failed to load inventory from Supabase:', error);
         }
