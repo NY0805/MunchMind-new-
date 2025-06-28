@@ -39,7 +39,7 @@ const KitchenInventory = () => {
     }
   }, [inventory, user, isAuthenticated, inventoryLoaded]);
 
-  const saveInventoryToSupabase = async (currentInventory = inventory) => {    
+  const saveInventoryToSupabase = async (inventory) => {    
     if (!isValidUser()) {
       console.log('invalid user:', user);
       return;
@@ -51,6 +51,7 @@ const KitchenInventory = () => {
         .from('inventory')
         .delete()
         .eq('user_id', user.id);
+      console.log('cleared...')
 
       // Insert new inventory items
       const inventoryData = inventory.map(item => ({
@@ -59,7 +60,7 @@ const KitchenInventory = () => {
         quantity: item.quantity,
         unit: item.unit
       }));
-
+      console.log('📦 Sending to Supabase:', inventoryData);
       if (inventoryData.length > 0) {
         await supabase
           .from('inventory')
