@@ -29,6 +29,8 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
   const { addToFavourites, removeFromFavourites, isFavourite } = useFavourites();
   const { user, isAuthenticated, isValidUser } = useUser();
   const navigate = useNavigate();
+  const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
+
   
   // Set timer based on recipe time
   useEffect(() => {
@@ -94,6 +96,7 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
     } else if (currentStep === recipe.steps.length - 1) {
       // Recipe completed - save to database
       await saveRecipeCompletion();
+      setShowCompletionOverlay(true);
     }
   };
   
@@ -390,6 +393,42 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
           </div>
         </div>
       )}
+
+      {showCompletionOverlay && (
+        <div className="modal-overlay z-[9999]" onClick={() => setShowCompletionOverlay(false)}>
+          <div
+            className={`modal-content modal-small animate-modal-in text-center ${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Check size={40} className={`mx-auto mb-4 ${
+              theme === 'synesthesia' ? 'text-purple-500' : 'text-green-500'
+            }`} />
+            <h3 className={`text-lg font-semibold mb-2 ${
+              theme === 'dark' ? 'text-white' : 'text-gray-800'
+            }`}>
+              Recipe Completed!
+            </h3>
+            <p className={`text-sm mb-6 ${
+              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+            }`}>
+              Great job! You’ve completed the recipe.
+            </p>
+      
+            <button
+              onClick={() => setShowCompletionOverlay(false)}
+              className={`w-full py-2 rounded-full font-medium ${
+                theme === 'synesthesia'
+                  ? 'bg-purple-500 hover:bg-purple-600 text-white'
+                  : 'bg-orange-500 hover:bg-orange-600 text-white'
+              } transition-colors`}
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}      
     </>
   );
 };
