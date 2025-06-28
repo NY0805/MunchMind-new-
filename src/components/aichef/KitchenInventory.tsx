@@ -30,10 +30,10 @@ const KitchenInventory = () => {
     if (!inventoryLoaded || !hasLoadedFromSupabase) return;
       
       // Avoid saving if inventory didn't actually change
-      const lastSaved = localStorage.getItem('kitchenInventory');
-      const hasChanged = lastSaved !== JSON.stringify(inventory);
-      if (!hasChanged) return;
-      localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
+    const lastSaved = localStorage.getItem('kitchenInventory');
+    const hasChanged = lastSaved !== JSON.stringify(inventory);
+    if (!hasChanged) return;
+    localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
     
     // Save to Supabase only for valid users
     if (isValidUser()) {
@@ -107,8 +107,9 @@ const KitchenInventory = () => {
         const saved = localStorage.getItem('kitchenInventory');
         setInventory(saved ? JSON.parse(saved) : initialInventory);
       }
-      setInventoryLoaded(true);
       setHasLoadedFromSupabase(true);
+      setInventoryLoaded(true);
+      
     };
 
     loadInventoryFromSupabase();
