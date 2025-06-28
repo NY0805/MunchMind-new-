@@ -36,16 +36,9 @@ const KitchenInventory = () => {
     }
   }, [inventory, user, isAuthenticated, inventoryLoaded]);
 
-  const saveInventoryToSupabase = async (currentInventory = inventory) => {    
-    if (!isValidUser()) {
-      console.log('invalid user:', user);
-      return;
-    } 
-    console.log('🔁 saveInventoryToSupabase CALLED');
-    console.log('👤 User:', user);
-    console.log('✅ isValidUser:', isValidUser());
-
-    
+  const saveInventoryToSupabase = async (currentInventory = inventory, userID: string) => {    
+    if (!userID || !isValidUser()) return;
+        
     try {
       // Clear existing inventory for this user
       await supabase
@@ -63,15 +56,9 @@ const KitchenInventory = () => {
       }));
       console.log('📦 Sending to Supabase:', inventoryData);
       if (inventoryData.length > 0) {
-        const {error } = await supabase
+        await supabase
           .from('inventory')
           .insert(inventoryData);
-
-        if (error) {
-          console.error('insert error');
-        } else {
-          console.log('insert successful');
-        }
       }
     } catch (error) {
       console.error('Failed to save inventory to Supabase:', error);
@@ -135,7 +122,8 @@ const KitchenInventory = () => {
  
   const addItem = () => {
     if (newItem && newQuantity) {
-      const newId = Math.max(0, ...inventory.map(item => item.id || 0)) + 1;
+      // const newId = Math.max(0, ...inventory.map(item => item.id || 0)) + 1;
+      const newId = Date.now();
       const updatedInventory = [...inventory, {
         id: newId,
         name: newItem,
@@ -149,7 +137,7 @@ const KitchenInventory = () => {
       setNewUnit('pcs');
 
       if (isValidUser()) {
-        saveInventoryToSupabase(updatedInventory);
+        saveInventoryToSupabase(updatedInventory, user?.id);
       }
     }
   };
@@ -160,7 +148,7 @@ const KitchenInventory = () => {
     setInventory(updatedInventory);
 
     if (isValidUser()) {
-      saveInventoryToSupabase(updatedInventory);
+      saveInventoryToSupabase(updatedInventory, user?.id);
     }
   };
 
