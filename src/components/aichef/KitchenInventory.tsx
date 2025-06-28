@@ -88,6 +88,9 @@ const KitchenInventory = () => {
               unit: item.unit
             }));
             setInventory(formattedInventory);
+          }else {
+            const saved = localStorage.getItem('kitchenInventory');
+            setInventory(saved ? JSON.parse(saved) : initialInventory);
           }
         } catch (error) {
           console.error('Failed to load inventory from Supabase:', error);
