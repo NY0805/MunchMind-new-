@@ -1102,8 +1102,7 @@ const Explore = () => {
 
       {/* Street Food Roulette Modal - Cross Icon Outside */}
       {showStreetFoodRoulette && (
-        <div className="<div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-" style={{ paddingBottom: '80px' }}>
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" }}>
           {/* Cross Icon - Outside the modal box */}
           <button
             onClick={closeStreetFoodRoulette}
