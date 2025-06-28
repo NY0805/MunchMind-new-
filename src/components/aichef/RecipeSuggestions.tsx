@@ -122,14 +122,14 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
   const displayedRecipes = showAll ? filteredRecipes.slice(0, 10) : filteredRecipes.slice(0, 3);
 
   return (
-    <div className={rounded-lg overflow-hidden shadow-md ${
+    <div className={`rounded-lg overflow-hidden shadow-md ${
       theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-    }}>
+    }`}>
       <div className="p-4">
         <div className="flex justify-between items-center mb-4">
-          <h3 className={font-semibold text-lg ${
+          <h3 className={`font-semibold text-lg ${
             theme === 'dark' ? 'text-white' : 'text-gray-800'
-          }}>
+          }`}>
             Recipe Suggestions
           </h3>
           
@@ -138,11 +138,11 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
             <select
               value={difficultyFilter}
               onChange={(e) => setDifficultyFilter(e.target.value)}
-              className={text-xs px-2 py-1 rounded border ${
+              className={`text-xs px-2 py-1 rounded border ${
                 theme === 'dark'
                   ? 'bg-gray-700 text-white border-gray-600'
                   : 'bg-gray-100 text-gray-700 border-gray-200'
-              } focus:outline-none}
+              } focus:outline-none`}
             >
               <option value="">Mixed Level</option>
               <option value="Easy">Easy</option>
@@ -156,9 +156,9 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
           {displayedRecipes.map((recipe) => (
             <div 
               key={recipe.id} 
-              className={rounded-lg overflow-hidden shadow-sm ${
+              className={`rounded-lg overflow-hidden shadow-sm ${
                 theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
-              } hover:shadow-md transition-shadow cursor-pointer}
+              } hover:shadow-md transition-shadow cursor-pointer`}
               onClick={() => onSelectRecipe(recipe)}
             >
               <div className="flex h-24">
@@ -171,9 +171,9 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
                 </div>
                 
                 <div className="w-2/3 p-3">
-                  <h4 className={font-medium text-sm mb-1 ${
+                  <h4 className={`font-medium text-sm mb-1 ${
                     theme === 'dark' ? 'text-white' : 'text-gray-800'
-                  }}>
+                  }`}>
                     {recipe.name}
                   </h4>
                   
@@ -181,28 +181,28 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-1">
                         <Clock size={12} className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} />
-                        <span className={text-xs ${
+                        <span className={`text-xs ${
                           theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                        }}>
+                        }`}>
                           {recipe.time}
                         </span>
                       </div>
                       
                       <div className="flex items-center gap-1">
                         <ChefHat size={12} className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} />
-                        <span className={text-xs ${
+                        <span className={`text-xs ${
                           theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                        }}>
+                        }`}>
                           {recipe.difficulty}
                         </span>
                       </div>
                     </div>
                     
-                    <div className={text-xs font-medium px-1.5 py-0.5 rounded ${
+                    <div className={`text-xs font-medium px-1.5 py-0.5 rounded ${
                       recipe.match >= 90
                         ? theme === 'dark' ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-600'
                         : theme === 'dark' ? 'bg-orange-900/30 text-orange-400' : 'bg-orange-100 text-orange-600'
-                    }}>
+                    }`}>
                       {recipe.match}% match
                     </div>
                   </div>
@@ -215,13 +215,13 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
         {!showAll && filteredRecipes.length > 3 && (
           <button 
             onClick={() => setShowAll(true)}
-            className={mt-4 w-full py-2 text-sm rounded-full ${
+            className={`mt-4 w-full py-2 text-sm rounded-full ${
               theme === 'synesthesia'
                 ? 'bg-purple-100 text-purple-600 hover:bg-purple-200'
                 : theme === 'dark'
                   ? 'bg-gray-700 text-orange-400 hover:bg-gray-600'
                   : 'bg-orange-100 text-orange-600 hover:bg-orange-200'
-            } transition-colors}
+            } transition-colors`}
           >
             Show More Suggestions
           </button>
