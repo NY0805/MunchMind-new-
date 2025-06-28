@@ -15,8 +15,7 @@ const initialInventory = [
 const KitchenInventory = () => {
   const [inventory, setInventory] = useState([]);
   const [inventoryLoaded, setInventoryLoaded] = useState(false);
-  const [hasLoadedFromSupabase, setHasLoadedFromSupabase] = useState(false);
-
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [newItem, setNewItem] = useState('');
   const [newQuantity, setNewQuantity] = useState('1');
@@ -27,12 +26,7 @@ const KitchenInventory = () => {
   
   // Save to localStorage and Supabase whenever inventory changes
   useEffect(() => {
-    if (!inventoryLoaded || !hasLoadedFromSupabase) return;
-      
-      // Avoid saving if inventory didn't actually change
-    const lastSaved = localStorage.getItem('kitchenInventory');
-    const hasChanged = lastSaved !== JSON.stringify(inventory);
-    if (!hasChanged) return;
+    if (!inventoryLoaded) return;
     localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
     
     // Save to Supabase only for valid users
@@ -43,7 +37,7 @@ const KitchenInventory = () => {
       setShowSaveWarning(true);
       setTimeout(() => setShowSaveWarning(false), 3000);
     }
-  }, [inventory, user, isAuthenticated, inventoryLoaded, hasLoadedFromSupabase]);
+  }, [inventory, user, isAuthenticated, inventoryLoaded]);
 
   const saveInventoryToSupabase = async () => {
     if (!isValidUser()) return;
@@ -88,28 +82,18 @@ const KitchenInventory = () => {
 
           if (data && data.length > 0) {
             const formattedInventory = data.map(item => ({
-              id: Date.now() + Math.random(),
+              id: item.id,
               name: item.ingredient,
               quantity: item.quantity,
               unit: item.unit
             }));
             setInventory(formattedInventory);
-          }else {
-            const saved = localStorage.getItem('kitchenInventory');
-            setInventory(saved ? JSON.parse(saved) : initialInventory);
           }
         } catch (error) {
           console.error('Failed to load inventory from Supabase:', error);
-          const saved = localStorage.getItem('kitchenInventory');
-          setInventory(saved ? JSON.parse(saved) : initialInventory);
         }
-      } else {
-        const saved = localStorage.getItem('kitchenInventory');
-        setInventory(saved ? JSON.parse(saved) : initialInventory);
       }
-      setHasLoadedFromSupabase(true);
       setInventoryLoaded(true);
-      
     };
 
     loadInventoryFromSupabase();
