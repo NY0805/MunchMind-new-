@@ -269,14 +269,15 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
                 Previous
               </button>
               
-              <button onClick={currentStep === recipe.steps.length - 1 ? handleCompleteRecipe : nextStep}
-                className={`px-4 py-2 rounded ${
-                  theme === 'synesthesia'
-                    ? 'bg-purple-500 text-white hover:bg-purple-600'
-                    : 'bg-orange-500 text-white hover:bg-orange-600'
-                } transition-colors`}
-              >
-                {currentStep === recipe.steps.length - 1 ? 'Complete Recipe' : 'Next'}
+              <button 
+                onClick={currentStep === recipe.steps.length - 1 ? handleCompleteRecipe : nextStep}
+              className={`px-4 py-2 rounded ${
+                theme === 'synesthesia'
+                  ? 'bg-purple-500 text-white hover:bg-purple-600'
+                  : 'bg-orange-500 text-white hover:bg-orange-600'
+              } transition-colors`}
+            >
+              {currentStep === recipe.steps.length - 1 ? 'Complete Recipe' : 'Next'}
               </button>
             </div>
             
