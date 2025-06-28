@@ -46,7 +46,7 @@ const NutritionalDNA = () => {
           const recipeCount = recipes?.length || 0;
           
           // Calculate nutritional values based on recipe count
-          const baseValues = [78, 65, 45, 82, 95, 30]; // Base percentages
+          const baseValues = [0, 0, 0, 0, 0, 0]; // Base percentages
           const updatedNutrients = nutrients.map((nutrient, index) => ({
             ...nutrient,
             value: Math.min(baseValues[index] + (recipeCount * 2), 100) // Increase by 2% per recipe, max 100%
