@@ -93,11 +93,7 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
   const nextStep = async () => {
     if (currentStep < recipe.steps.length - 1) {
       setCurrentStep(currentStep + 1);
-    }// else if (currentStep === recipe.steps.length - 1) {
-      
-    //   await saveRecipeCompletion();
-    //   setShowCompletionOverlay(true);
-    
+    }
   };
   
   const prevStep = () => {
@@ -154,9 +150,12 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
     navigate('/login');
   };
 
+  const [hasCompleted, setHasCompleted] = useState(false);
   const handleCompleteRecipe = async () => {
+    if (hasCompleted) return;
     try {
       await saveRecipeCompletion();
+      setHasCompleted(true);
       setShowCompletionOverlay(true);
     } catch (error) {
       console.error('Error completing recipe:', error);
