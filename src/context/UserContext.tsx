@@ -30,6 +30,20 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children, initialUser }: { children: ReactNode; initialUser?: any }) => {
+  useEffect(() => {
+  const handleFocus = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      setUser(session.user);
+      setIsAuthenticated(true);
+    }
+  };
+
+  window.addEventListener('focus', handleFocus);
+  return () => window.removeEventListener('focus', handleFocus);
+}, []);
+
+  
   const [user, setUser] = useState<any>(initialUser || null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!initialUser);
   const [dietaryPreferences, setDietaryPreferences] = useState({
