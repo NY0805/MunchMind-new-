@@ -97,7 +97,7 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
       
     //   await saveRecipeCompletion();
     //   setShowCompletionOverlay(true);
-    }
+    
   };
   
   const prevStep = () => {
