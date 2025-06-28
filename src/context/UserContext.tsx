@@ -44,7 +44,7 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
   ]);
 
   // Use the RevenueCat premium status hook
-  const { isPremium, isLoading: isLoadingProStatus } = usePremiumStatus(user?.id);
+  const { isPremium, isLoading: isLoadingProStatus, refetch: refetchPremiumStatus } = usePremiumStatus(user?.id);
   const [isPro, setIsPro] = useState(isPremium);
 
   // Update isPro when premium status changes
@@ -252,7 +252,7 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
   };
 
   const checkProStatus = async () => {
-    // Just update the local state
+    await refetchPremiumStatus();
     setIsPro(isPremium);
   };
 
