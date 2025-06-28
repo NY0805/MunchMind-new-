@@ -178,6 +178,23 @@ const ToonBites = () => {
   const handlePaywallSuccess = async () => {
     setShowPaywall(false);
     await checkProStatus();
+
+    if (user && !user.is_guest && user.id) {
+      const { data, error } = await supabase
+        .from('unlocked_premium')
+        .upsert({
+          user_id: user.id,
+          content_type: 'pro_access',
+          content_id: 1,
+          unlocked_at: new Date().toISOString()
+        });
+  
+      if (error) {
+        console.error('❌ Failed to save premium status to Supabase:', error);
+      } else {
+        console.log('✅ Premium access saved to Supabase:', data);
+      }
+    }
   };
 
   const handleLoginRedirect = () => {
