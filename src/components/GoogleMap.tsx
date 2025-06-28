@@ -288,12 +288,23 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
               );
 
               // Extract photos and generate URLs
-              const photos = placeDetails.photos ? 
-                placeDetails.photos.slice(0, 5).map((photo: any) => 
-                  getPhotoUrl(photo.photo_reference)
-                ) : [];
-              console.log("Photo references for", place.name, ":", placeDetails.photos?.map((p: any) => p.photo_reference));
-console.log("Generated photo URLs for", place.name, ":", photos);
+              // const photos = placeDetails.photos ? 
+              //   placeDetails.photos.slice(0, 5).map((photo: any) => 
+              //     getPhotoUrl(photo.photo_reference)
+              //   ) : [];
+
+              const photos = placeDetails.photos && placeDetails.photos.length > 0
+  ? placeDetails.photos.slice(0, 5).map((photo: any) => {
+      if (photo.getUrl) {
+        // Google's Places Photo object sometimes gives a getUrl() function instead of reference
+        return photo.getUrl({ maxWidth: 800 });
+      } else if (photo.photo_reference) {
+        return getPhotoUrl(photo.photo_reference);
+      } else {
+        return null;
+      }
+    }).filter((url: string | null) => url !== null)
+  : [];
 
 
               // Extract reviews
