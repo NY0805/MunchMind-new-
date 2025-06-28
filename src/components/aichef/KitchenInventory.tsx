@@ -42,17 +42,17 @@ const KitchenInventory = () => {
   // }, [inventory, user, isAuthenticated]);
 
   useEffect(() => {
-  localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
-
-  if (!loadedFromSupabase) return;
-
-  if (isValidUser()) {
-    saveInventoryToSupabase();
-  } else if (user?.is_guest) {
-    setShowSaveWarning(true);
-    setTimeout(() => setShowSaveWarning(false), 3000);
-  }
-}, [inventory, user, isAuthenticated, loadedFromSupabase]);
+    localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
+  
+    if (!loadedFromSupabase) return;
+  
+    if (isValidUser()) {
+      saveInventoryToSupabase();
+    } else if (user?.is_guest) {
+      setShowSaveWarning(true);
+      setTimeout(() => setShowSaveWarning(false), 3000);
+    }
+  }, [inventory, user, isAuthenticated, loadedFromSupabase]);
 
 
   const saveInventoryToSupabase = async () => {
@@ -115,40 +115,40 @@ const KitchenInventory = () => {
   // }, [user, isAuthenticated]);
 
   useEffect(() => {
-  const loadInventoryFromSupabase = async () => {
-    if (!isValidUser()) {
-      setLoadedFromSupabase(true);
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from('inventory')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-
-      if (Array.isArray(data) && data.length > 0) {
-        const formatted = data.map(item => ({
-          id: item.id,
-          name: item.ingredient,
-          quantity: item.quantity,
-          unit: item.unit,
-        }));
-
-        setInventory(formatted);
+    const loadInventoryFromSupabase = async () => {
+      if (!isValidUser()) {
+        setLoadedFromSupabase(true);
+        return;
       }
-    } catch (error) {
-      console.error('❌ Error loading Supabase inventory:', error);
-    } finally {
-      setLoadedFromSupabase(true);
-    }
-  };
-
-  loadInventoryFromSupabase();
-}, [user, isAuthenticated]);
+  
+      try {
+        const { data, error } = await supabase
+          .from('inventory')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: true });
+  
+        if (error) throw error;
+  
+        if (Array.isArray(data) && data.length > 0) {
+          const formatted = data.map(item => ({
+            id: item.id,
+            name: item.ingredient,
+            quantity: item.quantity,
+            unit: item.unit,
+          }));
+  
+          setInventory(formatted);
+        }
+      } catch (error) {
+        console.error('❌ Error loading Supabase inventory:', error);
+      } finally {
+        setLoadedFromSupabase(true);
+      }
+    };
+  
+    loadInventoryFromSupabase();
+  }, [user, isAuthenticated]);
 
   
   // Auto-add ingredients from smart refrigerator
