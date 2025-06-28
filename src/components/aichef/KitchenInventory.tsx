@@ -69,7 +69,7 @@ const KitchenInventory = () => {
       if (inventoryData.length > 0) {
         const {error } = await supabase
           .from('inventory')
-          .insert(inventoryData);
+          .upsert(inventoryData);
 
         if (error) {
           console.error('insert error');
@@ -139,7 +139,8 @@ const KitchenInventory = () => {
  
   const addItem = () => {
     if (newItem && newQuantity) {
-      const newId = Math.max(0, ...inventory.map(item => item.id || 0)) + 1;
+      // const newId = Math.max(0, ...inventory.map(item => item.id || 0)) + 1;
+      const newId = Date.now();
       const updatedInventory = [...inventory, {
         id: newId,
         name: newItem,
@@ -159,6 +160,18 @@ const KitchenInventory = () => {
     const updatedInventory = inventory.filter(item => item.id !== id);
     setInventory(updatedInventory);
   };
+
+  // Debounced save to Supabase when inventory changes
+  useEffect(() => {
+    if (!inventoryLoaded || !isValidUser()) return;
+  
+    const timeout = setTimeout(() => {
+      saveInventoryToSupabase(inventory);
+    }, 300); // wait 300ms after last change
+  
+    return () => clearTimeout(timeout); // cancel previous save if new change occurs
+  }, [inventory]);
+
 
   return (
     <div className={`rounded-lg overflow-hidden shadow-md ${
