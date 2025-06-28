@@ -79,9 +79,9 @@ const GlobalStreetFoodRoulette = () => {
       </button>
       
       {selectedFood && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center" onClick={() => setSelectedFood(null)}>
+        <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 flex items-center justify-center" onClick={() => setSelectedFood(null)}>
           <div 
-            className={`z-50 w-full max-w-md rounded-lg overflow-hidden shadow-lg animate-modal-in ${
+            className={`z-[10000] w-full max-w-md rounded-lg overflow-hidden shadow-lg animate-modal-in ${
               theme === 'dark' ? 'bg-gray-800' : 'bg-white'
             }`}
             onClick={(e) => e.stopPropagation()}
