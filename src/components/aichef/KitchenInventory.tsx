@@ -41,6 +41,10 @@ const KitchenInventory = () => {
       console.log('invalid user:', user);
       return;
     } 
+    console.log('🔁 saveInventoryToSupabase CALLED');
+    console.log('👤 User:', user);
+    console.log('✅ isValidUser:', isValidUser());
+
     
     try {
       // Clear existing inventory for this user
