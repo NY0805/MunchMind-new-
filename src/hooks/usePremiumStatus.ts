@@ -125,6 +125,7 @@ export const usePremiumStatus = (userId?: string) => {
     isPremium,
     isLoading,
     purchasePremium,
-    restorePurchases
+    restorePurchases,
+    refetch: checkEntitlements
   };
 };
