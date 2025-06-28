@@ -140,7 +140,7 @@ const KitchenInventory = () => {
       saveInventoryToSupabase(updatedInventory);
         console.log('saving', currentInventory)
     }
-  };
+  }
   
   const removeItem = (id: number) => {
     const updatedInventory = inventory.filter(item => item.id !== id);
