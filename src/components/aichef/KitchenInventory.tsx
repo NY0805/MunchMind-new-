@@ -13,10 +13,13 @@ const initialInventory = [
 ];
 
 const KitchenInventory = () => {
-  const [inventory, setInventory] = useState(() => {
-    const saved = localStorage.getItem('kitchenInventory');
-    return saved ? JSON.parse(saved) : initialInventory;
-  });
+  // const [inventory, setInventory] = useState(() => {
+  //   const saved = localStorage.getItem('kitchenInventory');
+  //   return saved ? JSON.parse(saved) : initialInventory;
+  // });
+  const [inventory, setInventory] = useState([]);
+  const [inventoryLoaded, setInventoryLoaded] = useState(false);
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [newItem, setNewItem] = useState('');
   const [newQuantity, setNewQuantity] = useState('1');
@@ -27,6 +30,7 @@ const KitchenInventory = () => {
   
   // Save to localStorage and Supabase whenever inventory changes
   useEffect(() => {
+    if (!inventoryLoaded) return;
     localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
     
     // Save to Supabase only for valid users
@@ -37,7 +41,7 @@ const KitchenInventory = () => {
       setShowSaveWarning(true);
       setTimeout(() => setShowSaveWarning(false), 3000);
     }
-  }, [inventory, user, isAuthenticated]);
+  }, [inventory, user, isAuthenticated, inventoryLoaded]);
 
   const saveInventoryToSupabase = async () => {
     if (!isValidUser()) return;
@@ -93,6 +97,7 @@ const KitchenInventory = () => {
           console.error('Failed to load inventory from Supabase:', error);
         }
       }
+      setInventoryLoaded(true);
     };
 
     loadInventoryFromSupabase();
