@@ -7,7 +7,7 @@ import { loadGoogleMapsAPI } from './utils/googleMapsLoader.ts';
 // Load Google Maps API once globally
 loadGoogleMapsAPI().catch(console.error);
 
-// RevenueCat Web SDK types
+// RevenueCat SDK types
 declare global {
   interface Window {
     Purchases?: {
