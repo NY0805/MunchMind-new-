@@ -39,7 +39,7 @@ const KitchenInventory = () => {
     }
   }, [inventory, user, isAuthenticated, inventoryLoaded]);
 
-  const saveInventoryToSupabase = async (inventory) => {    
+  const saveInventoryToSupabase = async (currentInventory = inventory) => {    
     if (!isValidUser()) {
       console.log('invalid user:', user);
       return;
@@ -54,7 +54,7 @@ const KitchenInventory = () => {
       console.log('cleared...')
 
       // Insert new inventory items
-      const inventoryData = inventory.map(item => ({
+      const inventoryData = currentInventory.map(item => ({
         user_id: user.id,
         ingredient: item.name,
         quantity: item.quantity,
@@ -62,9 +62,15 @@ const KitchenInventory = () => {
       }));
       console.log('📦 Sending to Supabase:', inventoryData);
       if (inventoryData.length > 0) {
-        await supabase
+        const {error } = await supabase
           .from('inventory')
           .insert(inventoryData);
+
+        if (error) {
+          console.error('insert error');
+        } else {
+          console.log('insert successful');
+        }
       }
     } catch (error) {
       console.error('Failed to save inventory to Supabase:', error);
