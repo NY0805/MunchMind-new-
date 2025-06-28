@@ -10,7 +10,7 @@ interface Restaurant {
   distance?: number;
   isOpen?: boolean;
   image?: string;
-  description?: string;
+  // description?: string;
   address?: string;
   phone?: string;
   coordinates: { lat: number; lng: number };
@@ -323,7 +323,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
                 distance: Math.round(distance * 100) / 100,
                 isOpen: placeDetails.opening_hours?.isOpen() ?? false,
                 image: photos[0] || getRandomRestaurantImage(),
-                // description: `${place.types?.[0]?.replace(/_/g, ' ') || 'Local'} restaurant`,
                 address: placeDetails.formatted_address || place.vicinity || 'Address not available',
                 phone: placeDetails.formatted_phone_number || 'Phone not available',
                 coordinates: {
@@ -359,7 +358,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
                 distance: Math.round(distance * 100) / 100,
                 isOpen: place.opening_hours?.isOpen() ?? false,
                 image: getRandomRestaurantImage(),
-                description: `${place.types?.[0]?.replace(/_/g, ' ') || 'Local'} restaurant`,
                 address: place.vicinity || 'Address not available',
                 phone: 'Phone not available',
                 coordinates: {
