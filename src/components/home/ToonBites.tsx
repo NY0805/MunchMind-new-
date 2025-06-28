@@ -86,6 +86,12 @@ const ToonBites = () => {
   const { addToFavourites, removeFromFavourites, isFavourite } = useFavourites();
   const navigate = useNavigate();
 
+  console.log('👤 isPro:', isPro);
+  console.log('🧠 isPremium (hook):', isPremium);
+  console.log('🔄 isLoadingProStatus:', isLoadingProStatus);
+  console.log('👀 user.id:', user?.id);
+
+
   // Check if user is guest or not logged in - lock all premium features
   const isGuest = !isAuthenticated || !user || user.is_guest;
   const hasAccess = !isGuest && isPro;
