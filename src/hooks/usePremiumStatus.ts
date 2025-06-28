@@ -38,11 +38,17 @@ export const usePremiumStatus = (userId?: string) => {
           .eq('content_type', 'pro_access')
           .limit(1);
           
+        // if (premiumData && premiumData.length > 0) {
+        //   setIsPremium(true);
+        //   setIsLoading(false);
+        //   return;
+        // }
         if (premiumData && premiumData.length > 0) {
+          console.log('✅ Premium detected in Supabase');
           setIsPremium(true);
-          setIsLoading(false);
-          return;
+          return true; // NEW
         }
+
       }
       
       // Default to not premium
