@@ -60,9 +60,9 @@ const CustomPaywall: React.FC<CustomPaywallProps> = ({
 
   if (showSuccess) {
     return (
-      <div className="fixed top-0 left-0 w-screen h-screen z-[9999] bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
+      <div className="modal-overlay">
         <div 
-          className={`w-full max-w-md rounded-lg shadow-lg animate-modal-in ${
+          className={`modal-content modal-medium animate-modal-in ${
             theme === 'dark' ? 'bg-gray-800' : 'bg-white'
           }`}
         >
@@ -87,9 +87,9 @@ const CustomPaywall: React.FC<CustomPaywallProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4 overflow-y-auto" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose}>
       <div 
-        className={`w-full max-w-md rounded-lg shadow-lg animate-modal-in ${
+        className={`modal-content modal-medium animate-modal-in ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}
         onClick={(e) => e.stopPropagation()}
