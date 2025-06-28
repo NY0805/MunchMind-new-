@@ -13,10 +13,6 @@ const initialInventory = [
 ];
 
 const KitchenInventory = () => {
-  // const [inventory, setInventory] = useState(() => {
-  //   const saved = localStorage.getItem('kitchenInventory');
-  //   return saved ? JSON.parse(saved) : initialInventory;
-  // });
   const [inventory, setInventory] = useState([]);
   const [inventoryLoaded, setInventoryLoaded] = useState(false);
   
@@ -125,24 +121,7 @@ const KitchenInventory = () => {
   const filteredInventory = inventory.filter(item => 
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
-  // const addItem = () => {
-  //   if (newItem && newQuantity) {
-  //     const newId = Math.max(0, ...inventory.map(item => item.id)) + 1;
-  //     const newInventoryItem = { 
-  //       id: newId, 
-  //       name: newItem, 
-  //       quantity: parseInt(newQuantity) || 1, 
-  //       unit: newUnit 
-  //     };
-      
-  //     setInventory([...inventory, newInventoryItem]);
-  //     setNewItem('');
-  //     setNewQuantity('1');
-  //     setNewUnit('pcs');
-  //   }
-  // };
-
+ 
   const addItem = () => {
     if (newItem && newQuantity) {
       const newId = Math.max(0, ...inventory.map(item => item.id || 0)) + 1;
