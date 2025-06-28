@@ -38,5 +38,19 @@ export default {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      addUtilities({
+        '.modal-overlay': {
+          position: 'fixed',
+          inset: '0',
+          'z-index': '9999',
+          display: 'flex',
+          'justify-content': 'center',
+          'align-items': 'center',
+          'background-color': 'rgba(0, 0, 0, 0.5)',
+        },
+      })
+    }
+  ],
 }
