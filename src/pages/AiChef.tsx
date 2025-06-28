@@ -6,6 +6,8 @@ import VirtualTastePreview from '../components/aichef/VirtualTastePreview';
 import LiveChatAssistant from '../components/aichef/LiveChatAssistant';
 import { useTheme } from '../context/ThemeContext';
 import { useLocation } from 'react-router-dom';
+import RecipeSuggestions from './RecipeSuggestions';
+
 
 const AiChef = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<null | {
@@ -61,7 +63,12 @@ const AiChef = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         <div className="lg:col-span-1 space-y-4">
           <KitchenInventory />
-          <RecipeSuggestions onSelectRecipe={handleSelectRecipe} />
+          {/* <RecipeSuggestions onSelectRecipe={handleSelectRecipe} /> */}
+          <RecipeSuggestions
+            inventory={inventory}
+            onSelectRecipe={handleSelectRecipe}
+          />
+
         </div>
         
         <div className="lg:col-span-2" id="recipe-section">
