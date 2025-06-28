@@ -15,7 +15,8 @@ const initialInventory = [
 const KitchenInventory = () => {
   const [inventory, setInventory] = useState([]);
   const [inventoryLoaded, setInventoryLoaded] = useState(false);
-  
+  const [hasLoadedFromSupabase, setHasLoadedFromSupabase] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [newItem, setNewItem] = useState('');
   const [newQuantity, setNewQuantity] = useState('1');
@@ -26,8 +27,8 @@ const KitchenInventory = () => {
   
   // Save to localStorage and Supabase whenever inventory changes
   useEffect(() => {
-    if (!inventoryLoaded) return;
-    localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
+    if (!inventoryLoaded || !hasLoadedFromSupabase) return;
+      localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
     
     // Save to Supabase only for valid users
     if (isValidUser()) {
@@ -37,7 +38,7 @@ const KitchenInventory = () => {
       setShowSaveWarning(true);
       setTimeout(() => setShowSaveWarning(false), 3000);
     }
-  }, [inventory, user, isAuthenticated, inventoryLoaded]);
+  }, [inventory, user, isAuthenticated, inventoryLoaded, hasLoadedFromSupabase]);
 
   const saveInventoryToSupabase = async () => {
     if (!isValidUser()) return;
@@ -102,6 +103,7 @@ const KitchenInventory = () => {
         setInventory(saved ? JSON.parse(saved) : initialInventory);
       }
       setInventoryLoaded(true);
+      setHasLoadedFromSupabase(true);
     };
 
     loadInventoryFromSupabase();
