@@ -154,6 +154,16 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
     navigate('/login');
   };
 
+  const handleCompleteRecipe = async () => {
+    try {
+      await saveRecipeCompletion();
+      setShowCompletionOverlay(true);
+    } catch (error) {
+      console.error('Error completing recipe:', error);
+    }
+  };
+
+
   return (
     <>
       {/* Fixed Timer Display */}
