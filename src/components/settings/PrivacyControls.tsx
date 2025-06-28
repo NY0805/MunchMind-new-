@@ -152,8 +152,7 @@ const PrivacyControls = () => {
         }
       });
       
-      setShowDeleteConfirm(false);
-      alert('All data has been deleted. The app will now refresh.');
+      setShowDeleteConfirm(false);      
       
       // Refresh the page to reset the app state
       window.location.reload();
