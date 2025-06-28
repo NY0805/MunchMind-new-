@@ -29,12 +29,16 @@ const KitchenInventory = () => {
     if (!inventoryLoaded) return;
     localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
     
-    if (user && user.is_guest) {
+    if (user?.is_guest) {
       // Show warning for guest users
       setShowSaveWarning(true);
       setTimeout(() => setShowSaveWarning(false), 3000);
+      return;
     }
-  }, [inventory, user, isAuthenticated, inventoryLoaded]);
+    if (isValidUser()) {
+      saveInventoryToSupabase(inventory);
+    }
+  }, [inventory, inventoryLoaded]);
 
   const saveInventoryToSupabase = async (currentInventory = inventory) => {    
     if (!isValidUser()) {
@@ -147,10 +151,6 @@ const KitchenInventory = () => {
       setNewItem('');
       setNewQuantity('1');
       setNewUnit('pcs');
-
-      if (isValidUser()) {
-        saveInventoryToSupabase(updatedInventory);
-      }
     }
   };
       
@@ -158,10 +158,6 @@ const KitchenInventory = () => {
   const removeItem = (id: number) => {
     const updatedInventory = inventory.filter(item => item.id !== id);
     setInventory(updatedInventory);
-
-    if (isValidUser()) {
-      saveInventoryToSupabase(updatedInventory);
-    }
   };
 
   return (
