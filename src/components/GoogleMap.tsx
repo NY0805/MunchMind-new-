@@ -323,7 +323,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
                 distance: Math.round(distance * 100) / 100,
                 isOpen: placeDetails.opening_hours?.isOpen() ?? false,
                 image: photos[0] || getRandomRestaurantImage(),
-                description: `${place.types?.[0]?.replace(/_/g, ' ') || 'Local'} restaurant`,
+                // description: `${place.types?.[0]?.replace(/_/g, ' ') || 'Local'} restaurant`,
                 address: placeDetails.formatted_address || place.vicinity || 'Address not available',
                 phone: placeDetails.formatted_phone_number || 'Phone not available',
                 coordinates: {
