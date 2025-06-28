@@ -87,7 +87,7 @@ const CustomPaywall: React.FC<CustomPaywallProps> = ({
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4 overflow-y-auto" onClick={onClose}>
       <div 
         className={`modal-content modal-medium animate-modal-in ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
