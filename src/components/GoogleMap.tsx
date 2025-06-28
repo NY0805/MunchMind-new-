@@ -288,11 +288,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
               );
 
               // Extract photos and generate URLs
-              // const photos = placeDetails.photos ? 
-              //   placeDetails.photos.slice(0, 5).map((photo: any) => 
-              //     getPhotoUrl(photo.photo_reference)
-              //   ) : [];
-
               const photos = placeDetails.photos && placeDetails.photos.length > 0
   ? placeDetails.photos.slice(0, 5).map((photo: any) => {
       if (photo.getUrl) {
