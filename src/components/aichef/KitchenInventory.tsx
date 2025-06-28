@@ -26,15 +26,20 @@ const KitchenInventory = () => {
   
   // Save to localStorage and Supabase whenever inventory changes
   useEffect(() => {
-    if (!inventoryLoaded) return;
-    localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
+  //   if (!inventoryLoaded) return;
+  //   localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
     
-    if (user && user.is_guest) {
-      // Show warning for guest users
-      setShowSaveWarning(true);
-      setTimeout(() => setShowSaveWarning(false), 3000);
-    }
-  }, [inventory, user, isAuthenticated, inventoryLoaded]);
+  //   if (user && user.is_guest) {
+  //     // Show warning for guest users
+  //     setShowSaveWarning(true);
+  //     setTimeout(() => setShowSaveWarning(false), 3000);
+  //   }
+  // }, [inventory, user, isAuthenticated, inventoryLoaded]);
+
+    if (!user || !isAuthenticated || !inventoryLoaded) return;
+    if (!isValidUser()) return;
+    saveInventoryToSupabase();
+  }, [inventory, user, isAuthenticated, inventroyLoaded]);
 
   const saveInventoryToSupabase = async (currentInventory = inventory, userID: string) => {    
     if (!userID || !isValidUser()) return;
