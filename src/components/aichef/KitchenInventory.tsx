@@ -28,6 +28,11 @@ const KitchenInventory = () => {
   // Save to localStorage and Supabase whenever inventory changes
   useEffect(() => {
     if (!inventoryLoaded || !hasLoadedFromSupabase) return;
+      
+      // Avoid saving if inventory didn't actually change
+      const lastSaved = localStorage.getItem('kitchenInventory');
+      const hasChanged = lastSaved !== JSON.stringify(inventory);
+      if (!hasChanged) return;
       localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
     
     // Save to Supabase only for valid users
@@ -83,7 +88,7 @@ const KitchenInventory = () => {
 
           if (data && data.length > 0) {
             const formattedInventory = data.map(item => ({
-              id: item.id,
+              id: Date.now() + Math.random(),
               name: item.ingredient,
               quantity: item.quantity,
               unit: item.unit
