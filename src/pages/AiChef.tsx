@@ -6,7 +6,6 @@ import VirtualTastePreview from '../components/aichef/VirtualTastePreview';
 import LiveChatAssistant from '../components/aichef/LiveChatAssistant';
 import { useTheme } from '../context/ThemeContext';
 import { useLocation } from 'react-router-dom';
-import RecipeSuggestions from './RecipeSuggestions';
 
 
 const AiChef = () => {
