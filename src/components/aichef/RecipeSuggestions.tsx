@@ -107,17 +107,30 @@ const allRecipeSuggestions = [
 
 interface RecipeSuggestionsProps {
   onSelectRecipe: (recipe: any) => void;
+  inventory: { name: string; quantity: number; unit: string }[];
 }
 
-const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe }) => {
+const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe, inventory }) => {
   const [showAll, setShowAll] = useState(false);
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const { theme } = useTheme();
 
-  const filteredRecipes = allRecipeSuggestions.filter(recipe => {
-    if (!difficultyFilter) return true;
-    return recipe.difficulty === difficultyFilter;
-  });
+  const inventoryNames = inventory.map(item => item.name.toLowerCase());
+
+  const calculateMatch = (recipeIngredients: string[], inventory: string[]) => {
+    const matched = recipeIngredients.filter(ingredient =>
+      inventory.some(item => ingredient.toLowerCase().includes(item))
+    );
+    return Math.round((matched.length / recipeIngredients.length) * 100);
+  };
+
+  const filteredRecipes = allRecipeSuggestions
+    .map(recipe => ({
+      ...recipe,
+      match: calculateMatch(recipe.ingredients, inventoryNames)
+    }))
+    .filter(recipe => !difficultyFilter || recipe.difficulty === difficultyFilter)
+    .sort((a, b) => b.match - a.match);
 
   const displayedRecipes = showAll ? filteredRecipes.slice(0, 10) : filteredRecipes.slice(0, 3);
 
@@ -132,7 +145,7 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
           }`}>
             Recipe Suggestions
           </h3>
-          
+
           <div className="flex items-center gap-2">
             <Filter size={16} className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} />
             <select
@@ -151,7 +164,7 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
             </select>
           </div>
         </div>
-        
+
         <div className="space-y-4">
           {displayedRecipes.map((recipe) => (
             <div 
@@ -169,14 +182,14 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
                     className="w-full h-full object-cover"
                   />
                 </div>
-                
+
                 <div className="w-2/3 p-3">
                   <h4 className={`font-medium text-sm mb-1 ${
                     theme === 'dark' ? 'text-white' : 'text-gray-800'
                   }`}>
                     {recipe.name}
                   </h4>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-1">
@@ -187,7 +200,7 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
                           {recipe.time}
                         </span>
                       </div>
-                      
+
                       <div className="flex items-center gap-1">
                         <ChefHat size={12} className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} />
                         <span className={`text-xs ${
@@ -197,7 +210,7 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
                         </span>
                       </div>
                     </div>
-                    
+
                     <div className={`text-xs font-medium px-1.5 py-0.5 rounded ${
                       recipe.match >= 90
                         ? theme === 'dark' ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-600'
@@ -211,7 +224,7 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
             </div>
           ))}
         </div>
-        
+
         {!showAll && filteredRecipes.length > 3 && (
           <button 
             onClick={() => setShowAll(true)}
@@ -230,5 +243,128 @@ const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe })
     </div>
   );
 };
+
+
+// const RecipeSuggestions: React.FC<RecipeSuggestionsProps> = ({ onSelectRecipe }) => {
+//   const [showAll, setShowAll] = useState(false);
+//   const [difficultyFilter, setDifficultyFilter] = useState('');
+//   const { theme } = useTheme();
+
+//   const filteredRecipes = allRecipeSuggestions.filter(recipe => {
+//     if (!difficultyFilter) return true;
+//     return recipe.difficulty === difficultyFilter;
+//   });
+
+//   const displayedRecipes = showAll ? filteredRecipes.slice(0, 10) : filteredRecipes.slice(0, 3);
+
+//   return (
+//     <div className={`rounded-lg overflow-hidden shadow-md ${
+//       theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+//     }`}>
+//       <div className="p-4">
+//         <div className="flex justify-between items-center mb-4">
+//           <h3 className={`font-semibold text-lg ${
+//             theme === 'dark' ? 'text-white' : 'text-gray-800'
+//           }`}>
+//             Recipe Suggestions
+//           </h3>
+          
+//           <div className="flex items-center gap-2">
+//             <Filter size={16} className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} />
+//             <select
+//               value={difficultyFilter}
+//               onChange={(e) => setDifficultyFilter(e.target.value)}
+//               className={`text-xs px-2 py-1 rounded border ${
+//                 theme === 'dark'
+//                   ? 'bg-gray-700 text-white border-gray-600'
+//                   : 'bg-gray-100 text-gray-700 border-gray-200'
+//               } focus:outline-none`}
+//             >
+//               <option value="">Mixed Level</option>
+//               <option value="Easy">Easy</option>
+//               <option value="Medium">Medium</option>
+//               <option value="Advanced">Advanced</option>
+//             </select>
+//           </div>
+//         </div>
+        
+//         <div className="space-y-4">
+//           {displayedRecipes.map((recipe) => (
+//             <div 
+//               key={recipe.id} 
+//               className={`rounded-lg overflow-hidden shadow-sm ${
+//                 theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
+//               } hover:shadow-md transition-shadow cursor-pointer`}
+//               onClick={() => onSelectRecipe(recipe)}
+//             >
+//               <div className="flex h-24">
+//                 <div className="w-1/3">
+//                   <img 
+//                     src={recipe.image} 
+//                     alt={recipe.name} 
+//                     className="w-full h-full object-cover"
+//                   />
+//                 </div>
+                
+//                 <div className="w-2/3 p-3">
+//                   <h4 className={`font-medium text-sm mb-1 ${
+//                     theme === 'dark' ? 'text-white' : 'text-gray-800'
+//                   }`}>
+//                     {recipe.name}
+//                   </h4>
+                  
+//                   <div className="flex items-center justify-between">
+//                     <div className="flex items-center gap-3">
+//                       <div className="flex items-center gap-1">
+//                         <Clock size={12} className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} />
+//                         <span className={`text-xs ${
+//                           theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+//                         }`}>
+//                           {recipe.time}
+//                         </span>
+//                       </div>
+                      
+//                       <div className="flex items-center gap-1">
+//                         <ChefHat size={12} className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} />
+//                         <span className={`text-xs ${
+//                           theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+//                         }`}>
+//                           {recipe.difficulty}
+//                         </span>
+//                       </div>
+//                     </div>
+                    
+//                     <div className={`text-xs font-medium px-1.5 py-0.5 rounded ${
+//                       recipe.match >= 90
+//                         ? theme === 'dark' ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-600'
+//                         : theme === 'dark' ? 'bg-orange-900/30 text-orange-400' : 'bg-orange-100 text-orange-600'
+//                     }`}>
+//                       {recipe.match}% match
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+        
+//         {!showAll && filteredRecipes.length > 3 && (
+//           <button 
+//             onClick={() => setShowAll(true)}
+//             className={`mt-4 w-full py-2 text-sm rounded-full ${
+//               theme === 'synesthesia'
+//                 ? 'bg-purple-100 text-purple-600 hover:bg-purple-200'
+//                 : theme === 'dark'
+//                   ? 'bg-gray-700 text-orange-400 hover:bg-gray-600'
+//                   : 'bg-orange-100 text-orange-600 hover:bg-orange-200'
+//             } transition-colors`}
+//           >
+//             Show More Suggestions
+//           </button>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
 
 export default RecipeSuggestions;
