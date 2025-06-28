@@ -130,17 +130,20 @@ const KitchenInventory = () => {
         name: newItem,
         quantity: parseInt(newQuantity) || 1,
         unit: newUnit
-      },];
+        }
+      ];
       setInventory(updatedInventory);
       setNewItem('');
       setNewQuantity('1');
       setNewUnit('pcs');
 
       if (isValidUser()) {
-      saveInventoryToSupabase(updatedInventory);
-        console.log('saving', currentInventory)
+        saveInventoryToSupabase(updatedInventory);
+        console.log('saving', updatedInventory)
+      }
     }
-  }
+  };
+      
   
   const removeItem = (id: number) => {
     const updatedInventory = inventory.filter(item => item.id !== id);
