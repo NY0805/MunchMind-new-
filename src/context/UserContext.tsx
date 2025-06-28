@@ -252,8 +252,10 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode; i
   };
 
   const checkProStatus = async () => {
-    await refetchPremiumStatus();
-    setIsPro(isPremium);
+    // await refetchPremiumStatus();
+    // setIsPro(isPremium);
+    const result = await refetchPremiumStatus(); 
+    setIsPro(result);
   };
 
   const showPaywall = async (): Promise<boolean> => {
