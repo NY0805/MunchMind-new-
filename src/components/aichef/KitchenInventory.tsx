@@ -31,7 +31,7 @@ const KitchenInventory = () => {
     
     // Save to Supabase only for valid users
     if (isValidUser()) {
-      saveInventoryToSupabase();
+      // saveInventoryToSupabase();
     } else if (user && user.is_guest) {
       // Show warning for guest users
       setShowSaveWarning(true);
@@ -39,7 +39,7 @@ const KitchenInventory = () => {
     }
   }, [inventory, user, isAuthenticated, inventoryLoaded]);
 
-  const saveInventoryToSupabase = async () => {
+  const saveInventoryToSupabase = async (currentInventory = inventory) => {
     if (!isValidUser()) return;
     
     try {
@@ -104,17 +104,17 @@ const KitchenInventory = () => {
     const smartFridge = connectedDevices.find(device => device.name === 'Smart Refrigerator');
     if (smartFridge?.connected) {
       // Simulate auto-detected ingredients
-      const autoDetectedItems = [
-        { id: Date.now() + 1, name: 'Tomatoes', quantity: 4, unit: 'pcs' },
-        { id: Date.now() + 2, name: 'Cheese', quantity: 200, unit: 'g' }
-      ];
+      // const autoDetectedItems = [
+      //   { id: Date.now() + 1, name: 'Tomatoes', quantity: 4, unit: 'pcs' },
+      //   { id: Date.now() + 2, name: 'Cheese', quantity: 200, unit: 'g' }
+      // ];
       
-      setInventory(prev => {
-        const newItems = autoDetectedItems.filter(newItem => 
-          !prev.some(existingItem => existingItem.name.toLowerCase() === newItem.name.toLowerCase())
-        );
-        return [...prev, ...newItems];
-      });
+      // setInventory(prev => {
+      //   const newItems = autoDetectedItems.filter(newItem => 
+      //     !prev.some(existingItem => existingItem.name.toLowerCase() === newItem.name.toLowerCase())
+      //   );
+      //   return [...prev, ...newItems];
+      // });
     }
   }, [connectedDevices]);
   
@@ -125,20 +125,30 @@ const KitchenInventory = () => {
   const addItem = () => {
     if (newItem && newQuantity) {
       const newId = Math.max(0, ...inventory.map(item => item.id || 0)) + 1;
-      setInventory([...inventory, {
+      const updatedInventory = [...inventory, {
         id: newId,
         name: newItem,
         quantity: parseInt(newQuantity) || 1,
         unit: newUnit
-      }]);
+      },];
+      setInventory(updatedInventory);
       setNewItem('');
       setNewQuantity('1');
       setNewUnit('pcs');
+
+      if (isValidUser()) {
+      saveInventoryToSupabase(updatedInventory);
+        console.log('saving', currentInventory)
     }
   };
   
   const removeItem = (id: number) => {
-    setInventory(inventory.filter(item => item.id !== id));
+    const updatedInventory = inventory.filter(item => item.id !== id);
+    setInventory(updatedInventory);
+
+    if (isValidUser()) {
+      saveInventoryToSupabase(updatedInventory);
+    }
   };
 
   return (
