@@ -126,17 +126,32 @@ const KitchenInventory = () => {
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
+  // const addItem = () => {
+  //   if (newItem && newQuantity) {
+  //     const newId = Math.max(0, ...inventory.map(item => item.id)) + 1;
+  //     const newInventoryItem = { 
+  //       id: newId, 
+  //       name: newItem, 
+  //       quantity: parseInt(newQuantity) || 1, 
+  //       unit: newUnit 
+  //     };
+      
+  //     setInventory([...inventory, newInventoryItem]);
+  //     setNewItem('');
+  //     setNewQuantity('1');
+  //     setNewUnit('pcs');
+  //   }
+  // };
+
   const addItem = () => {
     if (newItem && newQuantity) {
-      const newId = Math.max(0, ...inventory.map(item => item.id)) + 1;
-      const newInventoryItem = { 
-        id: newId, 
-        name: newItem, 
-        quantity: parseInt(newQuantity) || 1, 
-        unit: newUnit 
-      };
-      
-      setInventory([...inventory, newInventoryItem]);
+      const newId = Math.max(0, ...inventory.map(item => item.id || 0)) + 1;
+      setInventory([...inventory, {
+        id: newId,
+        name: newItem,
+        quantity: parseInt(newQuantity) || 1,
+        unit: newUnit
+      }]);
       setNewItem('');
       setNewQuantity('1');
       setNewUnit('pcs');
