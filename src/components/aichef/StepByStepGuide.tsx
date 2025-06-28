@@ -395,34 +395,39 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
       )}
 
       {showCompletionOverlay && (
-        <div className="modal-overlay z-[9999]" onClick={() => setShowCompletionOverlay(false)}>
+        <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4"
+          onClick={() => setShowCompletionOverlay(false)}>
           <div
-            className={`modal-content modal-small animate-modal-in text-center ${
-              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+            className={`w-full max-w-sm rounded-2xl p-6 text-center shadow-2xl animate-fade-in-up ${
+              theme === 'dark'
+                ? 'bg-gray-800 text-white'
+                : 'bg-white text-gray-800'
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <Check size={40} className={`mx-auto mb-4 ${
-              theme === 'synesthesia' ? 'text-purple-500' : 'text-green-500'
-            }`} />
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'dark' ? 'text-white' : 'text-gray-800'
+            <div className={`w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full ${
+              theme === 'synesthesia' ? 'bg-purple-100' : 'bg-green-100'
             }`}>
-              Recipe Completed!
-            </h3>
-            <p className={`text-sm mb-6 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-            }`}>
-              Great job! You’ve completed the recipe.
+              <Check
+                size={32}
+                className={`${
+                  theme === 'synesthesia' ? 'text-purple-600' : 'text-green-600'
+                }`}
+              />
+            </div>
+      
+            <h3 className="text-xl font-semibold mb-2">Recipe Completed!</h3>
+            <p className="text-sm mb-6">
+              Great job! You’ve successfully completed this recipe. Bon appétit!
             </p>
       
             <button
               onClick={() => setShowCompletionOverlay(false)}
-              className={`w-full py-2 rounded-full font-medium ${
+              className={`w-full py-2 rounded-full font-medium transition-colors ${
                 theme === 'synesthesia'
                   ? 'bg-purple-500 hover:bg-purple-600 text-white'
                   : 'bg-orange-500 hover:bg-orange-600 text-white'
-              } transition-colors`}
+              }`}
             >
               Done
             </button>
