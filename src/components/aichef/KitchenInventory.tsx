@@ -40,6 +40,7 @@ const KitchenInventory = () => {
   }, [inventory, user, isAuthenticated, inventoryLoaded]);
 
   const saveInventoryToSupabase = async (currentInventory = inventory) => {
+    console.log('current:', currentInventory);
     if (!isValidUser()) return;
     
     try {
@@ -139,7 +140,6 @@ const KitchenInventory = () => {
 
       if (isValidUser()) {
         saveInventoryToSupabase(updatedInventory);
-        console.log('saving', updatedInventory)
       }
     }
   };
