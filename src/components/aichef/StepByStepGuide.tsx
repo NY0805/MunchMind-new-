@@ -93,10 +93,10 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
   const nextStep = async () => {
     if (currentStep < recipe.steps.length - 1) {
       setCurrentStep(currentStep + 1);
-    } else if (currentStep === recipe.steps.length - 1) {
-      // Recipe completed - save to database
-      await saveRecipeCompletion();
-      setShowCompletionOverlay(true);
+    }// else if (currentStep === recipe.steps.length - 1) {
+      
+    //   await saveRecipeCompletion();
+    //   setShowCompletionOverlay(true);
     }
   };
   
@@ -270,7 +270,7 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
               </button>
               
               <button 
-                onClick={nextStep}
+                onClick={currentStep === recipe.steps.length - 1 ? handleCompleteRecipe : nextStep}
                 className={`px-4 py-2 rounded ${
                   theme === 'synesthesia'
                     ? 'bg-purple-500 text-white hover:bg-purple-600'
