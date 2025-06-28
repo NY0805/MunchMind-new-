@@ -332,11 +332,6 @@ const Favourites = () => {
               } truncate`}>
                 {showYumAgainModal.name}
               </h3>
-              <p className={`text-sm mb-4 ${
-                theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-              }`}>
-                How would you like to enjoy this again?
-              </p>
               
               <div className="space-y-2">
                 {activeTab === 'restaurants' && (
@@ -352,20 +347,22 @@ const Favourites = () => {
                     Go to Location
                   </button>
                 )}
-                
-                <button
-                  onClick={() => handleCookMyself(showYumAgainModal)}
-                  className={`w-full flex items-center justify-center gap-2 py-2 rounded-full font-medium text-sm ${
-                    theme === 'synesthesia'
-                      ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
-                      : theme === 'dark'
-                        ? 'bg-gray-700 text-orange-400 hover:bg-gray-600'
-                        : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                  } transition-colors`}
-                >
-                  <ChefHat size={16} />
-                  Cook Myself
-                </button>
+
+                {activeTab === 'recipes' && (
+                  <button
+                    onClick={() => handleCookMyself(showYumAgainModal)}
+                    className={`w-full flex items-center justify-center gap-2 py-2 rounded-full font-medium text-sm ${
+                      theme === 'synesthesia'
+                        ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                        : theme === 'dark'
+                          ? 'bg-gray-700 text-orange-400 hover:bg-gray-600'
+                          : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                    } transition-colors`}
+                  >
+                    <ChefHat size={16} />
+                    Cook Myself
+                  </button>
+                )}
                 
                 <button
                   onClick={() => setShowYumAgainModal(null)}
