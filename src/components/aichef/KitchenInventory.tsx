@@ -39,9 +39,11 @@ const KitchenInventory = () => {
     }
   }, [inventory, user, isAuthenticated, inventoryLoaded]);
 
-  const saveInventoryToSupabase = async (currentInventory = inventory) => {
-    console.log('current:', currentInventory);
-    if (!isValidUser()) return;
+  const saveInventoryToSupabase = async (currentInventory = inventory) => {    
+    if (!isValidUser()) {
+      console.log('invalid user:', user);
+      return;
+    } 
     
     try {
       // Clear existing inventory for this user
