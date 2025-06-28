@@ -153,6 +153,7 @@ const StepByStepGuide: React.FC<StepByStepGuideProps> = ({ recipe }) => {
   const [hasCompleted, setHasCompleted] = useState(false);
   const handleCompleteRecipe = async () => {
     if (hasCompleted) return;
+    setHasCompleted(true);
     try {
       await saveRecipeCompletion();
       setHasCompleted(true);
