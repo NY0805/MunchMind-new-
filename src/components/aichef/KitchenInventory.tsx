@@ -29,10 +29,7 @@ const KitchenInventory = () => {
     if (!inventoryLoaded) return;
     localStorage.setItem('kitchenInventory', JSON.stringify(inventory));
     
-    // Save to Supabase only for valid users
-    if (isValidUser()) {
-      // saveInventoryToSupabase();
-    } else if (user && user.is_guest) {
+    if (user && user.is_guest) {
       // Show warning for guest users
       setShowSaveWarning(true);
       setTimeout(() => setShowSaveWarning(false), 3000);
