@@ -6,130 +6,6 @@ import { useFavourites } from '../context/FavouritesContext';
 import { useUser } from '../context/UserContext';
 import GoogleMap from '../components/GoogleMap';
 
-// Mock data for restaurants with realistic NYC coordinates
-const mockRestaurants = [
-  {
-    id: 5001, // Unique ID range for Explore page restaurants
-    name: "Mama's Italian Kitchen",
-    cuisine: "Italian",
-    rating: 4.5,
-    distance: 0.8,
-    isOpen: true,
-    image: "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg",
-    description: "Authentic Italian cuisine with fresh pasta made daily",
-    address: "123 Main Street, Downtown",
-    phone: "+1 (555) 123-4567",
-    coordinates: { lat: 40.7589, lng: -73.9851 }, // Times Square area
-    priceLevel: 2,
-    specialDish: "Carbonara",
-    menu: [
-      { name: "Spaghetti Carbonara", price: 18, calories: 720, description: "Classic Roman pasta with eggs, cheese, and pancetta" },
-      { name: "Margherita Pizza", price: 16, calories: 580, description: "Fresh mozzarella, tomato sauce, and basil" },
-      { name: "Chicken Parmigiana", price: 22, calories: 850, description: "Breaded chicken with marinara and mozzarella" }
-    ],
-    reviews: [
-      { author: "Sarah M.", rating: 5, text: "Best carbonara in the city! Authentic Italian flavors.", date: "2 days ago" },
-      { author: "Mike R.", rating: 4, text: "Great atmosphere and delicious food. Will definitely return.", date: "1 week ago" }
-    ]
-  },
-  {
-    id: 5002,
-    name: "Dragon Palace",
-    cuisine: "Chinese",
-    rating: 4.2,
-    distance: 1.2,
-    isOpen: true,
-    image: "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg",
-    description: "Traditional Chinese dishes with modern presentation",
-    address: "456 Oak Avenue, Chinatown",
-    phone: "+1 (555) 234-5678",
-    coordinates: { lat: 40.7128, lng: -74.0060 }, // Lower Manhattan
-    priceLevel: 2,
-    specialDish: "Kung Pao Chicken",
-    menu: [
-      { name: "Kung Pao Chicken", price: 15, calories: 520, description: "Spicy stir-fried chicken with peanuts and vegetables" },
-      { name: "Sweet & Sour Pork", price: 14, calories: 640, description: "Crispy pork with bell peppers in tangy sauce" },
-      { name: "Beef Lo Mein", price: 13, calories: 580, description: "Soft noodles with tender beef and vegetables" }
-    ],
-    reviews: [
-      { author: "Lisa K.", rating: 4, text: "Excellent kung pao chicken! Perfect spice level.", date: "3 days ago" },
-      { author: "Tom W.", rating: 5, text: "Authentic flavors and generous portions.", date: "5 days ago" }
-    ]
-  },
-  {
-    id: 5003,
-    name: "Green Garden Café",
-    cuisine: "Vegan",
-    rating: 4.7,
-    distance: 0.5,
-    isOpen: false,
-    image: "https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg",
-    description: "Plant-based cuisine with locally sourced ingredients",
-    address: "789 Green Street, Eco District",
-    phone: "+1 (555) 345-6789",
-    coordinates: { lat: 40.7505, lng: -73.9934 }, // Midtown East
-    priceLevel: 3,
-    specialDish: "Buddha Bowl",
-    menu: [
-      { name: "Buddha Bowl", price: 14, calories: 380, description: "Quinoa, roasted vegetables, and tahini dressing" },
-      { name: "Vegan Burger", price: 16, calories: 450, description: "Plant-based patty with avocado and sprouts" },
-      { name: "Acai Bowl", price: 12, calories: 320, description: "Acai berries with granola and fresh fruits" }
-    ],
-    reviews: [
-      { author: "Emma D.", rating: 5, text: "Amazing vegan options! The Buddha bowl is incredible.", date: "1 day ago" },
-      { author: "Alex P.", rating: 4, text: "Fresh ingredients and creative dishes.", date: "4 days ago" }
-    ]
-  },
-  {
-    id: 5004,
-    name: "Sakura Sushi",
-    cuisine: "Japanese",
-    rating: 4.6,
-    distance: 2.1,
-    isOpen: true,
-    image: "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg",
-    description: "Fresh sushi and traditional Japanese dishes",
-    address: "321 Bamboo Lane, Little Tokyo",
-    phone: "+1 (555) 456-7890",
-    coordinates: { lat: 40.7282, lng: -74.0776 }, // West Village
-    priceLevel: 3,
-    specialDish: "Salmon Sashimi",
-    menu: [
-      { name: "Salmon Sashimi", price: 18, calories: 280, description: "Fresh Atlantic salmon, thinly sliced" },
-      { name: "California Roll", price: 12, calories: 320, description: "Crab, avocado, and cucumber roll" },
-      { name: "Chicken Teriyaki", price: 16, calories: 540, description: "Grilled chicken with teriyaki glaze" }
-    ],
-    reviews: [
-      { author: "David L.", rating: 5, text: "Freshest sushi in town! Excellent quality.", date: "2 days ago" },
-      { author: "Maria S.", rating: 4, text: "Great atmosphere and skilled chefs.", date: "1 week ago" }
-    ]
-  },
-  {
-    id: 5005,
-    name: "Spice Route",
-    cuisine: "Indian",
-    rating: 4.3,
-    distance: 1.8,
-    isOpen: true,
-    image: "https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg",
-    description: "Authentic Indian spices and traditional recipes",
-    address: "654 Curry Street, Spice Quarter",
-    phone: "+1 (555) 567-8901",
-    coordinates: { lat: 40.7614, lng: -73.9776 }, // Upper West Side
-    priceLevel: 2,
-    specialDish: "Butter Chicken",
-    menu: [
-      { name: "Butter Chicken", price: 17, calories: 680, description: "Creamy tomato curry with tender chicken" },
-      { name: "Vegetable Biryani", price: 15, calories: 620, description: "Fragrant basmati rice with mixed vegetables" },
-      { name: "Lamb Vindaloo", price: 19, calories: 780, description: "Spicy Goan curry with tender lamb" }
-    ],
-    reviews: [
-      { author: "Raj P.", rating: 5, text: "Authentic flavors that remind me of home!", date: "3 days ago" },
-      { author: "Jennifer M.", rating: 4, text: "Excellent spice levels and generous portions.", date: "6 days ago" }
-    ]
-  }
-];
-
 // Mock search suggestions
 const searchSuggestions = [
   "Carbonara", "Sushi", "Butter Chicken", "Buddha Bowl", "Pizza Margherita",
@@ -169,14 +45,13 @@ const streetFoods = [
 ];
 
 
-// Trending dishes
+// Trending dishes - simplified without restaurant count
 const trendingDishes = [
   {
     id: 7001, // Unique ID range for trending dishes
     name: "Korean Corn Dogs",
     badge: "Viral",
     image: "https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg",
-    restaurants: 12,
     description: "Crispy Korean-style corn dogs with various coatings and fillings",
     origin: "Seoul, South Korea",
     calories: 450,
@@ -193,7 +68,6 @@ const trendingDishes = [
     name: "Birria Tacos",
     badge: "Trending",
     image: "https://images.pexels.com/photos/2092507/pexels-photo-2092507.jpeg",
-    restaurants: 8,
     description: "Mexican beef stew tacos served with rich consommé for dipping",
     origin: "Jalisco, Mexico",
     calories: 380,
@@ -210,7 +84,6 @@ const trendingDishes = [
     name: "Dalgona Coffee",
     badge: "Popular",
     image: "https://images.pexels.com/photos/4790070/pexels-photo-4790070.jpeg",
-    restaurants: 15,
     description: "Whipped coffee drink that became a viral sensation",
     origin: "South Korea",
     calories: 120,
@@ -231,8 +104,7 @@ const Explore = () => {
   const [selectedDistance, setSelectedDistance] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState('');
   const [openNow, setOpenNow] = useState(false);
-  const [filteredRestaurants, setFilteredRestaurants] = useState(mockRestaurants);
-  const [allRestaurants, setAllRestaurants] = useState(mockRestaurants);
+  const [filteredRestaurants, setFilteredRestaurants] = useState<any[]>([]);
   const [mapRestaurants, setMapRestaurants] = useState<any[]>([]);
   const [showSpinWheel, setShowSpinWheel] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -337,7 +209,7 @@ const Explore = () => {
 
     // Open now filter
     if (openNow) {
-      filtered = filtered.filter(restaurant => restaurant.isOpen);
+      filtered = filtered.filter(restaurant => restaurant.isOpen === true);
     }
 
     setFilteredRestaurants(filtered);
@@ -489,7 +361,6 @@ const Explore = () => {
   // Handle restaurants update from map
   const handleRestaurantsUpdate = (restaurants: any[]) => {
     setMapRestaurants(restaurants);
-    setAllRestaurants([...mockRestaurants, ...restaurants]);
   };
 
   // Apply filters when dependencies change (NO auto-scroll)
@@ -506,6 +377,17 @@ const Explore = () => {
 
   // Display restaurants for list view
   const displayedRestaurants = showMore ? filteredRestaurants : filteredRestaurants.slice(0, 10);
+
+  // Get open status display text
+  const getOpenStatusDisplay = (restaurant: any) => {
+    if (restaurant.isOpen === true) {
+      return { text: 'Open', color: 'text-green-500' };
+    } else if (restaurant.isOpen === false) {
+      return { text: 'Closed', color: 'text-red-500' };
+    } else {
+      return { text: 'Hours Unknown', color: 'text-gray-500' };
+    }
+  };
 
   return (
     <>
@@ -759,60 +641,61 @@ const Explore = () => {
             <div className={`rounded-xl overflow-hidden shadow-lg mb-8 ${
               theme === 'dark' ? 'bg-gray-800' : 'bg-white'
             }`}>
-              {displayedRestaurants.map((restaurant, index) => (
-                <div
-                  key={restaurant.id}
-                  onClick={() => handleRestaurantSelect(restaurant)}
-                  className={`flex items-center p-4 cursor-pointer transition-colors hover:bg-opacity-50 ${
-                    theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
-                  } ${index !== displayedRestaurants.length - 1 ? 'border-b border-gray-300' : ''}`}
-                >
-                  <img
-                    src={restaurant.image}
-                    alt={restaurant.name}
-                    className="w-16 h-16 rounded-lg object-cover mr-4"
-                  />
-                  
-                  <div className="flex-1">
-                    <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                      {restaurant.name}
-                    </h4>
-                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                      {restaurant.cuisine} • {restaurant.distance}km • {getPriceLevelDisplay(restaurant.priceLevel)}
-                    </p>
-                    <div className="flex items-center gap-3 mt-1">
-                      <div className="flex items-center gap-1">
-                        <Star size={14} className="text-yellow-500 fill-current" />
-                        <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {restaurant.rating.toFixed(1)}
-                        </span>
-                      </div>
-                      <div className={`flex items-center gap-1 ${
-                        restaurant.isOpen ? 'text-green-500' : 'text-red-500'
-                      }`}>
-                        <Clock size={14} />
-                        <span className="text-sm">
-                          {restaurant.isOpen ? 'Open' : 'Closed'}
-                        </span>
+              {displayedRestaurants.map((restaurant, index) => {
+                const openStatus = getOpenStatusDisplay(restaurant);
+                return (
+                  <div
+                    key={restaurant.id}
+                    onClick={() => handleRestaurantSelect(restaurant)}
+                    className={`flex items-center p-4 cursor-pointer transition-colors hover:bg-opacity-50 ${
+                      theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+                    } ${index !== displayedRestaurants.length - 1 ? 'border-b border-gray-300' : ''}`}
+                  >
+                    <img
+                      src={restaurant.image}
+                      alt={restaurant.name}
+                      className="w-16 h-16 rounded-lg object-cover mr-4"
+                    />
+                    
+                    <div className="flex-1">
+                      <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                        {restaurant.name}
+                      </h4>
+                      <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                        {restaurant.cuisine} • {restaurant.distance}km • {getPriceLevelDisplay(restaurant.priceLevel)}
+                      </p>
+                      <div className="flex items-center gap-3 mt-1">
+                        <div className="flex items-center gap-1">
+                          <Star size={14} className="text-yellow-500 fill-current" />
+                          <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                            {restaurant.rating.toFixed(1)}
+                          </span>
+                        </div>
+                        <div className={`flex items-center gap-1 ${openStatus.color}`}>
+                          <Clock size={14} />
+                          <span className="text-sm">
+                            {openStatus.text}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                    
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFavoriteToggle(restaurant);
+                      }}
+                      className={`p-2 rounded-full transition-colors ${
+                        isFavourite(restaurant.id)
+                          ? 'text-red-500'
+                          : theme === 'dark' ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-500'
+                      }`}
+                    >
+                      <Heart size={18} fill={isFavourite(restaurant.id) ? 'currentColor' : 'none'} />
+                    </button>
                   </div>
-                  
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFavoriteToggle(restaurant);
-                    }}
-                    className={`p-2 rounded-full transition-colors ${
-                      isFavourite(restaurant.id)
-                        ? 'text-red-500'
-                        : theme === 'dark' ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-500'
-                    }`}
-                  >
-                    <Heart size={18} fill={isFavourite(restaurant.id) ? 'currentColor' : 'none'} />
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Show More / Show Less Button */}
@@ -836,53 +719,72 @@ const Explore = () => {
           </>
         )}
 
-        {/* Recommended Restaurants */}
+        {/* Recommended Restaurants - Now uses real nearby restaurants */}
         <div className="mb-8">
           <h3 className={`text-xl font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
             Recommended for You
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {mockRestaurants.slice(0, 3).map(restaurant => (
-              <div
-                key={`rec-${restaurant.id}`}
-                onClick={() => handleRestaurantSelect(restaurant)}
-                className={`rounded-xl overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 ${
-                  theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-                }`}
-              >
-                <img
-                  src={restaurant.image}
-                  alt={restaurant.name}
-                  className="w-full h-32 object-cover"
-                />
-                <div className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                        {restaurant.name}
-                      </h4>
-                      <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {restaurant.cuisine} • {getPriceLevelDisplay(restaurant.priceLevel)}
-                      </p>
+          {mapRestaurants.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {mapRestaurants.slice(0, 3).map(restaurant => {
+                const openStatus = getOpenStatusDisplay(restaurant);
+                return (
+                  <div
+                    key={`rec-${restaurant.id}`}
+                    onClick={() => handleRestaurantSelect(restaurant)}
+                    className={`rounded-xl overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 ${
+                      theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+                    }`}
+                  >
+                    <img
+                      src={restaurant.image}
+                      alt={restaurant.name}
+                      className="w-full h-32 object-cover"
+                    />
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                            {restaurant.name}
+                          </h4>
+                          <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {restaurant.cuisine} • {getPriceLevelDisplay(restaurant.priceLevel)}
+                          </p>
+                          <div className={`flex items-center gap-1 mt-1 ${openStatus.color}`}>
+                            <Clock size={12} />
+                            <span className="text-xs">
+                              {openStatus.text}
+                            </span>
+                          </div>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFavoriteToggle(restaurant);
+                          }}
+                          className={`p-1 rounded-full transition-colors ${
+                            isFavourite(restaurant.id)
+                              ? 'text-red-500'
+                              : theme === 'dark' ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-500'
+                          }`}
+                        >
+                          <Heart size={16} fill={isFavourite(restaurant.id) ? 'currentColor' : 'none'} />
+                        </button>
+                      </div>
                     </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleFavoriteToggle(restaurant);
-                      }}
-                      className={`p-1 rounded-full transition-colors ${
-                        isFavourite(restaurant.id)
-                          ? 'text-red-500'
-                          : theme === 'dark' ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-500'
-                      }`}
-                    >
-                      <Heart size={16} fill={isFavourite(restaurant.id) ? 'currentColor' : 'none'} />
-                    </button>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className={`p-6 rounded-xl text-center ${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+            } shadow-lg`}>
+              <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Loading nearby restaurants...
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Global Street Food */}
@@ -915,7 +817,7 @@ const Explore = () => {
           </div>
         </div>
 
-        {/* Trending Dishes */}
+        {/* Trending Dishes - Simplified without restaurant count */}
         <div>
           <h3 className={`text-xl font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
             Trending Dishes
@@ -948,9 +850,6 @@ const Explore = () => {
                   <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                     {dish.name}
                   </h4>
-                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {dish.restaurants} restaurants nearby
-                  </p>
                 </div>
               </div>
             ))}
