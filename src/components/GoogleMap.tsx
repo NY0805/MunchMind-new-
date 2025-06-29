@@ -102,7 +102,8 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
         placeId: placeId,
         fields: [
           'name', 'rating', 'user_ratings_total', 'reviews', 'photos', 
-          'opening_hours', 'formatted_phone_number', 'formatted_address',
+          'opening_hours', 'opening_hours.periods', 'opening_hours.open_now',
+          'formatted_phone_number', 'formatted_address',
           'price_level', 'types', 'geometry'
         ]
       };
@@ -120,6 +121,29 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
   // Generate photo URL from photo reference
   const getPhotoUrl = (photoReference: string, maxWidth: number = 800): string => {
     return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photo_reference=${photoReference}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
+  };
+
+  // Determine if restaurant is open
+  const getOpenStatus = (place: any): boolean | null => {
+    // First try to use opening_hours.isOpen() if periods exist
+    if (place.opening_hours && place.opening_hours.periods && place.opening_hours.periods.length > 0) {
+      try {
+        const isOpenResult = place.opening_hours.isOpen();
+        if (isOpenResult !== undefined) {
+          return isOpenResult;
+        }
+      } catch (error) {
+        console.warn('Error calling isOpen():', error);
+      }
+    }
+    
+    // Fallback to open_now if available
+    if (place.opening_hours && place.opening_hours.open_now !== undefined) {
+      return place.opening_hours.open_now;
+    }
+    
+    // If no opening hours data available, return null
+    return null;
   };
 
   // Clear existing markers
@@ -315,13 +339,16 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
               // Extract opening hours
               const openingHours = placeDetails.opening_hours?.weekday_text || [];
 
+              // Get accurate open status
+              const openStatus = getOpenStatus(placeDetails);
+
               const restaurant: Restaurant = {
                 id: place.place_id ? place.place_id.hashCode() : Date.now() + i,
                 name: place.name || 'Unknown Restaurant',
                 cuisine: place.types?.[0]?.replace(/_/g, ' ') || 'Restaurant',
                 rating: placeDetails.rating || place.rating || 3.5 + Math.random() * 1.5,
                 distance: Math.round(distance * 100) / 100,
-                isOpen: placeDetails.opening_hours?.isOpen() ?? false,
+                isOpen: openStatus !== null ? openStatus : undefined,
                 image: photos[0] || getRandomRestaurantImage(),
                 address: placeDetails.formatted_address || place.vicinity || 'Address not available',
                 phone: placeDetails.formatted_phone_number || 'Phone not available',
@@ -356,7 +383,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
                 cuisine: place.types?.[0]?.replace(/_/g, ' ') || 'Restaurant',
                 rating: place.rating || 3.5 + Math.random() * 1.5,
                 distance: Math.round(distance * 100) / 100,
-                isOpen: place.opening_hours?.isOpen() ?? false,
+                isOpen: place.opening_hours?.isOpen() ?? undefined,
                 image: getRandomRestaurantImage(),
                 address: place.vicinity || 'Address not available',
                 phone: 'Phone not available',
@@ -389,7 +416,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
               icon: {
                 path: window.google.maps.SymbolPath.CIRCLE,
                 scale: 8,
-                fillColor: restaurant.isOpen ? '#10B981' : '#EF4444',
+                fillColor: restaurant.isOpen === true ? '#10B981' : restaurant.isOpen === false ? '#EF4444' : '#6B7280',
                 fillOpacity: 1,
                 strokeColor: '#FFFFFF',
                 strokeWeight: 2,
@@ -403,14 +430,24 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
                 infoWindowRef.current.close();
               }
 
+              // Determine open status text
+              let openStatusText = '';
+              if (restaurant.isOpen === true) {
+                openStatusText = '🟢 Open';
+              } else if (restaurant.isOpen === false) {
+                openStatusText = '🔴 Closed';
+              } else {
+                openStatusText = '⚪ Hours Unknown';
+              }
+
               // Set new content and open
               infoWindowRef.current.setContent(`
                 <div style="max-width: 200px;">
                   <h3 style="margin: 0 0 8px 0; font-weight: bold;">${restaurant.name}</h3>
                   <p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">${restaurant.address}</p>
                   <p style="margin: 0 0 4px 0; font-size: 12px;">⭐ ${restaurant.rating?.toFixed(1)} • ${restaurant.distance}km</p>
-                  <p style="margin: 0 0 8px 0; font-size: 12px; color: ${restaurant.isOpen ? '#10B981' : '#EF4444'};">
-                    ${restaurant.isOpen ? '🟢 Open' : '🔴 Closed'}
+                  <p style="margin: 0 0 8px 0; font-size: 12px;">
+                    ${openStatusText}
                   </p>
                   <button onclick="window.selectRestaurant(${restaurant.id})" 
                           style="background: #f97316; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">
