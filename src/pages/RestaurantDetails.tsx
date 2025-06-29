@@ -164,6 +164,19 @@ const RestaurantDetails = () => {
     });
   };
 
+  // Get open status display
+  const getOpenStatusDisplay = () => {
+    if (restaurant.isOpen === true) {
+      return { text: 'Open', color: 'text-green-400' };
+    } else if (restaurant.isOpen === false) {
+      return { text: 'Closed', color: 'text-red-400' };
+    } else {
+      return { text: 'Hours Unknown', color: 'text-gray-400' };
+    }
+  };
+
+  const openStatus = getOpenStatusDisplay();
+
   return (
     <>
       <div className={`min-h-screen ${
@@ -218,11 +231,9 @@ const RestaurantDetails = () => {
                 <MapPin size={16} />
                 <span>{restaurant.distance}km away</span>
               </div>
-              <div className={`flex items-center gap-1 ${
-                restaurant.isOpen ? 'text-green-400' : 'text-red-400'
-              }`}>
+              <div className={`flex items-center gap-1 ${openStatus.color}`}>
                 <Clock size={16} />
-                <span>{restaurant.isOpen ? 'Open' : 'Closed'}</span>
+                <span>{openStatus.text}</span>
               </div>
             </div>
           </div>
@@ -291,7 +302,6 @@ const RestaurantDetails = () => {
             theme === 'dark' ? 'bg-gray-800' : 'bg-white'
           }`}>
             <div className="flex">
-              
               <button
                 onClick={() => setActiveTab('reviews')}
                 className={`flex-1 py-3 px-4 font-medium transition-colors border-b-2 ${
@@ -319,8 +329,6 @@ const RestaurantDetails = () => {
             </div>
 
             <div className="p-4">
-              
-
               {activeTab === 'reviews' && (
                 <div>
                   <h3 className={`text-lg font-semibold mb-4 ${
@@ -329,11 +337,11 @@ const RestaurantDetails = () => {
                     Customer Reviews
                   </h3>
                   
-                  {/* Overall Rating Summary */}
+                  {/* Overall Rating Summary - Centered */}
                   <div className={`p-4 rounded-lg mb-4 ${
                     theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
                   }`}>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-center gap-4">
                       <div className="text-center">
                         <div className={`text-3xl font-bold ${
                           theme === 'dark' ? 'text-white' : 'text-gray-800'
@@ -356,7 +364,7 @@ const RestaurantDetails = () => {
                         <div className={`text-sm mt-1 ${
                           theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                         }`}>
-                          {restaurant.userRatingsTotal} reviews
+                          {restaurant.userRatingsTotal || 0} reviews
                         </div>
                       </div>
                     </div>
@@ -476,6 +484,21 @@ const RestaurantDetails = () => {
                       <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                         {getPriceLevelDisplay(restaurant.priceLevel)} - {getPriceLevelDescription(restaurant.priceLevel)}
                       </p>
+                    </div>
+
+                    {/* Current Status */}
+                    <div className={`p-4 rounded-lg ${
+                      theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
+                    }`}>
+                      <h4 className={`font-medium mb-2 ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-800'
+                      }`}>
+                        Current Status
+                      </h4>
+                      <div className={`flex items-center gap-2 ${openStatus.color}`}>
+                        <Clock size={16} />
+                        <span className="text-sm font-medium">{openStatus.text}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
