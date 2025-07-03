@@ -1,5 +1,4 @@
 # Munch Mind — Let Your Mood Decide What’s for Lunch!
-
 ## 🌟 Inspiration  
 These days, choosing what to eat isn’t always easy. We often find ourselves scrolling through endless options, unsure of what truly matches our mood or health goals. Sometimes, we’re just too busy with work or studies to even think about meals—we either skip them or settle for whatever’s convenient.
 
